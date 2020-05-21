@@ -1,5 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/error/AppError';
+import ICacheProvider from '@shared/provider/CacheProvider/models/ICacheProvider';
+import IAuthProvider from '@shared/provider/AuthProvider/models/IAuthProvider';
 import ICreateBusinessDTO from '../Dtos/ICreateBusinessDTO';
 import IBusinessRepository from '../repositories/IBusinessRepository';
 import Business from '../infra/typeorm/entities/Business';
@@ -13,6 +15,12 @@ class CreateBusinessService {
 
     @inject('CpfAndCnpjProvider')
     private cpfAndCnpjProvider: ICpfAndCnpjProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
+
+    @inject('AuthProvider')
+    private authProvider: IAuthProvider,
   ) {}
 
   public async execute({
@@ -29,7 +37,7 @@ class CreateBusinessService {
     district,
     city,
     state,
-  }: ICreateBusinessDTO): Promise<Business> {
+  }: ICreateBusinessDTO): Promise<{ business: Business; token: string }> {
     const nameBusiness = await this.businessRepository.findInBusiness({
       find: name,
       where: 'name',
@@ -83,20 +91,29 @@ class CreateBusinessService {
     });
 
     if (cpfOrCnpjBusiness) {
-      if (
-        stripCpfOrCnpj.length === 11 &&
-        cpfOrCnpjBusiness.user_id !== user_id
-      ) {
-        throw new AppError(
-          'CPF registered at another business for another user.',
-        );
+      if (stripCpfOrCnpj.length === 11) {
+        if (cpfOrCnpjBusiness.user_id !== user_id)
+          throw new AppError(
+            'CPF registered at another business for another user.',
+          );
       } else {
         throw new AppError('CNPJ registered at another business.');
       }
     }
 
+    const cached = await this.cacheProvider.recover<string>(
+      `avatar-tmp-business:${user_id}`,
+    );
+
+    let avatar;
+    if (cached) {
+      avatar = cached;
+      await this.cacheProvider.remove(`avatar-tmp-business:${user_id}`);
+    }
+
     const business = await this.businessRepository.create({
       user_id,
+      avatar,
       name,
       category,
       cpf_or_cnpj: formatedCpfOrCnpj,
@@ -111,7 +128,12 @@ class CreateBusinessService {
       state,
     });
 
-    return business;
+    const token = this.authProvider.signIn({
+      user_id,
+      business_id: business.id,
+    });
+
+    return { business, token };
   }
 }
 

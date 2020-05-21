@@ -17,6 +17,7 @@ class BusinessRepository implements IBUsinessRepository {
 
   public async create({
     user_id,
+    avatar,
     name,
     category,
     cpf_or_cnpj,
@@ -46,6 +47,7 @@ class BusinessRepository implements IBUsinessRepository {
 
     const business = this.ormRepository.create({
       user_id,
+      avatar,
       name,
       cpf_or_cnpj,
       cell_phone,
@@ -60,7 +62,7 @@ class BusinessRepository implements IBUsinessRepository {
       ...isCategory,
     });
 
-    this.ormRepository.save(business);
+    await this.ormRepository.save(business);
 
     return business;
   }
@@ -76,6 +78,16 @@ class BusinessRepository implements IBUsinessRepository {
     });
 
     return business;
+  }
+
+  public async findById(id: string): Promise<Business | undefined> {
+    const business = await this.ormRepository.findOne(id);
+
+    return business;
+  }
+
+  public async save(business: Business): Promise<void> {
+    await this.ormRepository.save(business);
   }
 }
 

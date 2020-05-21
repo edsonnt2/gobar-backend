@@ -26,6 +26,9 @@ export default class User {
   password: string;
 
   @Column()
+  avatar: string;
+
+  @Column()
   birthDate: string;
 
   @OneToMany(() => Business, business => business.user)

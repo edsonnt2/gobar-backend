@@ -1,5 +1,6 @@
 export default interface ICreateBusinessDTO {
   user_id: string;
+  avatar?: string;
   name: string;
   category: string;
   cell_phone?: string;

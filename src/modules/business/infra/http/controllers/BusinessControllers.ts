@@ -21,7 +21,7 @@ export default class UsersControllers {
 
     const createBusinessService = container.resolve(CreateBusinessService);
 
-    const user = await createBusinessService.execute({
+    const { business, token } = await createBusinessService.execute({
       user_id: req.user.id,
       name,
       cpf_or_cnpj,
@@ -37,6 +37,6 @@ export default class UsersControllers {
       state,
     });
 
-    return res.json(user);
+    return res.json({ business, token });
   }
 }

@@ -26,6 +26,18 @@ class FakeBusinessRepository implements IBusinessRepository {
 
     return getBusiness;
   }
+
+  public async findById(id: string): Promise<Business | undefined> {
+    const business = this.business.find(findBusiness => findBusiness.id === id);
+
+    return business;
+  }
+
+  public async save(business: Business): Promise<void> {
+    const findIndex = this.business.findIndex(({ id }) => id === business.id);
+
+    this.business[findIndex] = business;
+  }
 }
 
 export default FakeBusinessRepository;

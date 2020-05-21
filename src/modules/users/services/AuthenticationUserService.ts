@@ -42,7 +42,7 @@ class AuthenticationUserService {
 
     if (!compareHashed) throw new AppError('Credentials is required.');
 
-    const token = this.authProvider.signIn(user.id);
+    const token = this.authProvider.signIn({ user_id: user.id });
 
     return { user, token };
   }

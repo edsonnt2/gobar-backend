@@ -49,6 +49,16 @@ class FakeUserRepository implements IUserRepository {
 
     return user;
   }
+
+  public async findById(id: string): Promise<User | undefined> {
+    const user = await this.ormRepository.findOne(id);
+
+    return user;
+  }
+
+  public async save(user: User): Promise<void> {
+    await this.ormRepository.save(user);
+  }
 }
 
 export default FakeUserRepository;

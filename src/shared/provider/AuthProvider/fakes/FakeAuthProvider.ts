@@ -7,10 +7,11 @@ class FakeAuthProvider implements IAuthProvider {
   }
 
   public verifyToken(token: string): ITokenDTO {
+    const fakeId = 'fhfuiaheh9fy9y945yr9f09f7070s7fa0f7d8v7ds0897fd98';
     return {
       exp: token,
       iat: 'fake',
-      sub: 'fhfuiaheh9fy9y945yr9f09f7070s7fa0f7d8v7ds0897fd98',
+      sub: JSON.stringify({ user_id: fakeId, business_id: fakeId }),
     } as ITokenDTO;
   }
 }

@@ -38,6 +38,9 @@ export default class Business {
   category: Category;
 
   @Column()
+  avatar: string;
+
+  @Column()
   cell_phone?: string;
 
   @Column()
