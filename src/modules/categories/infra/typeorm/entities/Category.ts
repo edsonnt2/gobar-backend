@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import Business from './Business';
+import BusinessCategory from '@modules/business/infra/typeorm/entities/BusinessCategory';
 
 @Entity('categories')
 export default class Category {
@@ -16,8 +16,11 @@ export default class Category {
   @Column()
   name: string;
 
-  @OneToMany(() => Business, business => business.category)
-  business: Business[];
+  @OneToMany(
+    () => BusinessCategory,
+    businessCategory => businessCategory.category,
+  )
+  business_category: BusinessCategory;
 
   @CreateDateColumn()
   created_at: Date;

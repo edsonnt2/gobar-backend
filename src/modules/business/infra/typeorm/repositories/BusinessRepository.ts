@@ -2,8 +2,8 @@ import IBUsinessRepository from '@modules/business/repositories/IBusinessReposit
 import { getRepository, Repository } from 'typeorm';
 import ICreateBusinessDTO from '@modules/business/Dtos/ICreateBusinessDTO';
 import IFindInBusinessDTO from '@modules/business/Dtos/IFindInBusinessDTO';
+import Category from '@modules/categories/infra/typeorm/entities/Category';
 import Business from '../entities/Business';
-import Category from '../entities/Category';
 
 class BusinessRepository implements IBUsinessRepository {
   private ormRepository: Repository<Business>;
@@ -19,7 +19,7 @@ class BusinessRepository implements IBUsinessRepository {
     user_id,
     avatar,
     name,
-    category,
+    categories,
     cpf_or_cnpj,
     cell_phone,
     phone,
@@ -31,19 +31,19 @@ class BusinessRepository implements IBUsinessRepository {
     city,
     state,
   }: ICreateBusinessDTO): Promise<Business> {
-    const findCategory = await this.ormCategory.findOne({
-      where: {
-        name: category,
-      },
-    });
+    const findCategories = await this.ormCategory.find({ where: categories });
 
-    const isCategory = findCategory
-      ? { category_id: findCategory.id }
-      : {
-          category: {
-            name: category,
-          },
-        };
+    const business_category = categories.map(category => {
+      const findCategory = findCategories.find(
+        cat => cat.name === category.name,
+      );
+
+      return {
+        category: {
+          ...(findCategory || category),
+        },
+      };
+    });
 
     const business = this.ormRepository.create({
       user_id,
@@ -59,7 +59,7 @@ class BusinessRepository implements IBUsinessRepository {
       district,
       city,
       state,
-      ...isCategory,
+      business_category,
     });
 
     await this.ormRepository.save(business);

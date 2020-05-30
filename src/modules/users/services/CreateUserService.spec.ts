@@ -1,20 +1,24 @@
 import 'reflect-metadata';
 import AppError from '@shared/error/AppError';
+import FakeAuthProvider from '@shared/provider/AuthProvider/fakes/FakeAuthProvider';
 import CreateUserService from './CreateUserService';
 import FakeUserRepository from '../repositories/fakes/FakeUserRepository';
 import FakeHashProvider from '../provider/fakes/FakeHashProvider';
 
 let fakeUserRepository: FakeUserRepository;
 let fakeHashProvider: FakeHashProvider;
+let fakeAuthProvider: FakeAuthProvider;
 let createUserService: CreateUserService;
 
 describe('CreateUserServie', () => {
   beforeEach(() => {
     fakeUserRepository = new FakeUserRepository();
     fakeHashProvider = new FakeHashProvider();
+    fakeAuthProvider = new FakeAuthProvider();
     createUserService = new CreateUserService(
       fakeUserRepository,
       fakeHashProvider,
+      fakeAuthProvider,
     );
 
     jest
@@ -23,22 +27,23 @@ describe('CreateUserServie', () => {
   });
 
   it('should be able to create a new user', async () => {
-    const user = await createUserService.execute({
+    const data = await createUserService.execute({
       full_name: 'Full Name Test',
-      cell_phone: '(12) 99999-9999',
+      cell_phone: '12999999099',
       email: 'test@test.com',
       password: 'test-password',
       birthDate: '1991/09/08',
     });
 
-    expect(user).toHaveProperty('id');
-    expect(user.full_name).toBe('Full Name Test');
+    expect(data).toHaveProperty('token');
+    expect(data).toHaveProperty('user');
+    expect(data.user.id).toBe('123456');
   });
 
   it('should not be able to create a new account with email already registered', async () => {
     await createUserService.execute({
       full_name: 'Full Name Test',
-      cell_phone: '(12) 99999-9999',
+      cell_phone: '12999999999',
       email: 'test@test.com',
       password: 'test-password',
       birthDate: '1991/09/08',
@@ -47,7 +52,7 @@ describe('CreateUserServie', () => {
     await expect(
       createUserService.execute({
         full_name: 'Full Name Test Two',
-        cell_phone: '(55) 00000-0000',
+        cell_phone: '55000000000',
         email: 'test@test.com',
         password: 'test-password',
         birthDate: '1991/09/08',
@@ -58,7 +63,7 @@ describe('CreateUserServie', () => {
   it('should not be able to create a new account with cell_phone already registered', async () => {
     await createUserService.execute({
       full_name: 'Full Name Test',
-      cell_phone: '(12) 99999-9999',
+      cell_phone: '12999999999',
       email: 'test@test.com',
       password: 'test-password',
       birthDate: '1991/09/08',
@@ -67,7 +72,7 @@ describe('CreateUserServie', () => {
     await expect(
       createUserService.execute({
         full_name: 'Full Name Test Two',
-        cell_phone: '(12) 99999-9999',
+        cell_phone: '12999999999',
         email: 'testwo@test.com',
         password: 'test-password',
         birthDate: '1991/09/08',
@@ -93,7 +98,7 @@ describe('CreateUserServie', () => {
     await expect(
       createUserService.execute({
         full_name: 'Full Name Test',
-        cell_phone: '(12) 99999-9999',
+        cell_phone: '12999999999',
         email: 'test@test.com',
         password: 'test-password',
         birthDate: 'invalid-date',
@@ -105,7 +110,7 @@ describe('CreateUserServie', () => {
     await expect(
       createUserService.execute({
         full_name: 'Full Name Test',
-        cell_phone: '(12) 99999-9999',
+        cell_phone: '12999999999',
         email: 'test@test.com',
         password: 'test-password',
         birthDate: '2004/5/20',

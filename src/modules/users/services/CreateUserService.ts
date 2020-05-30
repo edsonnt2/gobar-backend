@@ -2,9 +2,17 @@ import { injectable, inject } from 'tsyringe';
 import { differenceInYears, format } from 'date-fns';
 import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/error/AppError';
+import IAuthProvider from '@shared/provider/AuthProvider/models/IAuthProvider';
 import IHashProvider from '../provider/models/IHashProvider';
 import IUserRepository from '../repositories/IUserRepository';
-import ICreateUserDTO from '../Dtos/ICreateUserDTO';
+
+interface IRequest {
+  full_name: string;
+  cell_phone: string;
+  email: string;
+  password: string;
+  birthDate: string;
+}
 
 @injectable()
 class CreateUserService {
@@ -14,6 +22,9 @@ class CreateUserService {
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+
+    @inject('AuthProvider')
+    private authProvider: IAuthProvider,
   ) {}
 
   public async execute({
@@ -22,17 +33,24 @@ class CreateUserService {
     email,
     password,
     birthDate,
-  }: ICreateUserDTO): Promise<User> {
+  }: IRequest): Promise<{ user: User; token: string }> {
     const isEmailRegistered = await this.userRepository.findByEmail(email);
 
     if (isEmailRegistered)
-      throw new AppError('Email already registered in another account.');
+      throw new AppError('Email already registered in another account');
+
+    const formattedToNumber = Number(
+      cell_phone
+        .split('')
+        .filter(char => Number(char) || char === '0')
+        .join(''),
+    );
 
     const iscell_phoneRegistered = await this.userRepository.findBycellPhone(
-      cell_phone,
+      formattedToNumber,
     );
     if (iscell_phoneRegistered)
-      throw new AppError('Phone already registered in another account.');
+      throw new AppError('Phone already registered in another account');
 
     const passwordHashed = await this.hashProvider.generateHash(password);
 
@@ -40,20 +58,22 @@ class CreateUserService {
 
     const differenceYears = differenceInYears(Date.now(), parsedDate);
 
-    if (!differenceYears) throw new AppError('Format Date invalid.');
+    if (!differenceYears) throw new AppError('Format Date invalid');
 
     if (differenceYears < 16)
-      throw new AppError('Age minimum for register is 16 Years.');
+      throw new AppError('Age minimum for register is 16 Years');
 
     const user = await this.userRepository.create({
       full_name,
-      cell_phone,
+      cell_phone: formattedToNumber,
       email,
       password: passwordHashed,
       birthDate: format(parsedDate, 'yyyy/MM/dd'),
     });
 
-    return user;
+    const token = this.authProvider.signIn({ user_id: user.id });
+
+    return { user, token };
   }
 }
 

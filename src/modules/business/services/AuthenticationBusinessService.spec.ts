@@ -26,7 +26,7 @@ describe('AuthenticationBusiness', () => {
     const user = await fakeUserRepository.create({
       full_name: 'Name Test',
       email: 'test@test.com',
-      cell_phone: '(12) 99999-9999',
+      cell_phone: 12999999999,
       password: 'new-password',
       birthDate: '1991-09-08',
     });
@@ -34,7 +34,7 @@ describe('AuthenticationBusiness', () => {
     const business = await fakeBusinessRepository.create({
       user_id: user.id,
       name: 'New Business',
-      category: 'bares',
+      categories: [{ name: 'bares' }],
       cpf_or_cnpj: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,
@@ -65,7 +65,7 @@ describe('AuthenticationBusiness', () => {
     const user = await fakeUserRepository.create({
       full_name: 'Name Test',
       email: 'test@test.com',
-      cell_phone: '(12) 99999-9999',
+      cell_phone: 12999999999,
       password: 'new-password',
       birthDate: '1991-09-08',
     });
@@ -82,7 +82,7 @@ describe('AuthenticationBusiness', () => {
     const user = await fakeUserRepository.create({
       full_name: 'Name Test',
       email: 'test@test.com',
-      cell_phone: '(12) 99999-9999',
+      cell_phone: 12999999999,
       password: 'new-password',
       birthDate: '1991-09-08',
     });
@@ -90,7 +90,7 @@ describe('AuthenticationBusiness', () => {
     const business = await fakeBusinessRepository.create({
       user_id: 'other-user',
       name: 'New Business',
-      category: 'bares',
+      categories: [{ name: 'bares' }],
       cpf_or_cnpj: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,

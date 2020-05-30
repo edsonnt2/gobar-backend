@@ -6,9 +6,10 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import User from '@modules/users/infra/typeorm/entities/User';
-import Category from './Category';
+import BusinessCategory from './BusinessCategory';
 
 @Entity('business')
 export default class Business {
@@ -21,30 +22,28 @@ export default class Business {
   @Column('uuid')
   user_id: string;
 
-  @ManyToOne(() => User, user => user.business, {
-    eager: true,
-  })
+  @ManyToOne(() => User, user => user.business)
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column('uuid')
-  category_id: string;
-
-  @ManyToOne(() => Category, category => category.business, {
-    cascade: ['insert'],
-    eager: true,
-  })
-  @JoinColumn({ name: 'category_id' })
-  category: Category;
+  @OneToMany(
+    () => BusinessCategory,
+    businessCategory => businessCategory.business,
+    {
+      cascade: ['insert'],
+      eager: true,
+    },
+  )
+  business_category: BusinessCategory[];
 
   @Column()
   avatar: string;
 
   @Column()
-  cell_phone?: string;
+  cell_phone?: number;
 
   @Column()
-  phone?: string;
+  phone?: number;
 
   @Column()
   cpf_or_cnpj: string;

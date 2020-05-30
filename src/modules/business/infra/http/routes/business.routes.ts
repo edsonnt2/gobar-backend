@@ -15,7 +15,7 @@ const upload = multer(configUpload.multer);
 
 businessRouter.post(
   '/',
-  validatorsBusiness.bussinessCreate,
+  validatorsBusiness.businessCreate,
   businessControllers.create,
 );
 

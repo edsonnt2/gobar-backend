@@ -28,7 +28,7 @@ class UpdateAvatarBusinessService {
     user_id,
     business_id,
     avatarFilename,
-  }: IRequest): Promise<Business | { avatar: string }> {
+  }: IRequest): Promise<Business | undefined> {
     const business = business_id
       ? await this.businessRepository.findById(business_id)
       : undefined;
@@ -58,7 +58,7 @@ class UpdateAvatarBusinessService {
 
     await this.cacheProvider.save(`avatar-tmp-business:${user_id}`, avatar);
 
-    return { avatar };
+    return undefined;
   }
 }
 

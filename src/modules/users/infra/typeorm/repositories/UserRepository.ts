@@ -40,7 +40,7 @@ class FakeUserRepository implements IUserRepository {
     return user;
   }
 
-  public async findBycellPhone(cell_phone: string): Promise<User | undefined> {
+  public async findBycellPhone(cell_phone: number): Promise<User | undefined> {
     const user = await this.ormRepository.findOne({
       where: {
         cell_phone,

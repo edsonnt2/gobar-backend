@@ -29,18 +29,26 @@ class AuthenticationUserService {
   }: IRequest): Promise<{ user: User; token: string }> {
     let user;
 
-    user = await this.userRepository.findBycellPhone(cellPhoneOrEmail);
+    user = await this.userRepository.findByEmail(cellPhoneOrEmail);
 
-    if (!user) user = await this.userRepository.findByEmail(cellPhoneOrEmail);
+    if (!user) {
+      const formattedToNumber = cellPhoneOrEmail
+        .split('')
+        .filter(char => Number(char) || char === '0')
+        .join('');
+      user = await this.userRepository.findBycellPhone(
+        Number(formattedToNumber),
+      );
+    }
 
-    if (!user) throw new AppError('Credentials is required.');
+    if (!user) throw new AppError('Credentials is required');
 
     const compareHashed = await this.hashProvider.compareHash(
       password,
       user.password,
     );
 
-    if (!compareHashed) throw new AppError('Credentials is required.');
+    if (!compareHashed) throw new AppError('Credentials is required');
 
     const token = this.authProvider.signIn({ user_id: user.id });
 

@@ -26,13 +26,13 @@ describe('AuthenticationUser', () => {
     await fakeUserRepository.create({
       full_name: 'Name Test',
       email: 'test@test.com',
-      cell_phone: '(12) 99999-9999',
+      cell_phone: 12999999999,
       password: 'new-password',
       birthDate: '1991-09-08',
     });
 
     const logincell_phone = await authenticationUserService.execute({
-      cellPhoneOrEmail: '(12) 99999-9999',
+      cellPhoneOrEmail: '12999999999',
       password: 'new-password',
     });
 
@@ -49,7 +49,7 @@ describe('AuthenticationUser', () => {
     await fakeUserRepository.create({
       full_name: 'Name Test',
       email: 'test@test.com',
-      cell_phone: '(12) 99999-9999',
+      cell_phone: 12999999999,
       password: 'new-password',
       birthDate: '1991-09-08',
     });
@@ -73,7 +73,7 @@ describe('AuthenticationUser', () => {
     await fakeUserRepository.create({
       full_name: 'Name Test',
       email: 'test@test.com',
-      cell_phone: '(12) 99999-9999',
+      cell_phone: 12999999999,
       password: 'new-password',
       birthDate: '1991-09-08',
     });

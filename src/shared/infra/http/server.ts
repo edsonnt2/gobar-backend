@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import 'dotenv';
 import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 import 'express-async-errors';
 import { errors } from 'celebrate';
 import AppError from '@shared/error/AppError';
@@ -11,6 +12,7 @@ import '../typeorm';
 import '@shared/container';
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use('/file', express.static(uploadConfig.folderUpload));
 app.use(routes);

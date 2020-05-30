@@ -17,7 +17,7 @@ export default class User {
   full_name: string;
 
   @Column()
-  cell_phone: string;
+  cell_phone: number;
 
   @Column()
   email: string;

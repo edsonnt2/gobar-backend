@@ -7,7 +7,7 @@ export default class UsersControllers {
     const {
       name,
       cpf_or_cnpj,
-      category,
+      categories,
       cell_phone,
       phone,
       zip_code,
@@ -25,7 +25,7 @@ export default class UsersControllers {
       user_id: req.user.id,
       name,
       cpf_or_cnpj,
-      category,
+      categories,
       cell_phone,
       phone,
       zip_code,
