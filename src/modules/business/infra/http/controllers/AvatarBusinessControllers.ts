@@ -14,8 +14,6 @@ export default class UsersControllers {
       avatarFilename: req.file.filename,
     });
 
-    return businessOrAvatar
-      ? res.json(businessOrAvatar)
-      : res.status(204).send();
+    return res.json(businessOrAvatar);
   }
 }

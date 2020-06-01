@@ -2,6 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/error/AppError';
 import ICacheProvider from '@shared/provider/CacheProvider/models/ICacheProvider';
 import IAuthProvider from '@shared/provider/AuthProvider/models/IAuthProvider';
+import IStorageProvider from '@shared/provider/StorageProvider/models/IStorageProvider';
 import IBusinessRepository from '../repositories/IBusinessRepository';
 import Business from '../infra/typeorm/entities/Business';
 import ICpfAndCnpjProvider from '../provider/models/ICpfAndCnpjProvider';
@@ -37,6 +38,9 @@ class CreateBusinessService {
 
     @inject('AuthProvider')
     private authProvider: IAuthProvider,
+
+    @inject('StorageProvider')
+    private storageProvider: IStorageProvider,
   ) {}
 
   public async execute({
@@ -59,7 +63,21 @@ class CreateBusinessService {
       where: 'name',
     });
 
-    if (nameBusiness) throw new AppError('Business name already registered');
+    const cached = await this.cacheProvider.recover<string>(
+      `avatar-tmp-business:${user_id}`,
+    );
+
+    let avatar: string | undefined;
+    if (cached) {
+      avatar = cached;
+
+      await this.cacheProvider.remove(`avatar-tmp-business:${user_id}`);
+    }
+
+    if (nameBusiness) {
+      if (avatar) this.storageProvider.deleteFile(avatar);
+      throw new AppError('Business name already registered');
+    }
 
     const formattedCellPhone =
       cell_phone &&
@@ -81,10 +99,12 @@ class CreateBusinessService {
         where: 'cell_phone',
       });
 
-      if (cellPhoneBusiness && cellPhoneBusiness.user_id !== user_id)
+      if (cellPhoneBusiness && cellPhoneBusiness.user_id !== user_id) {
+        if (avatar) this.storageProvider.deleteFile(avatar);
         throw new AppError(
           'Cell phone already registered with another business',
         );
+      }
     }
 
     if (formattedPhone) {
@@ -93,15 +113,20 @@ class CreateBusinessService {
         where: 'phone',
       });
 
-      if (phoneBusiness && phoneBusiness.user_id !== user_id)
+      if (phoneBusiness && phoneBusiness.user_id !== user_id) {
+        if (avatar) this.storageProvider.deleteFile(avatar);
         throw new AppError('Phone already registered with another business');
+      }
     }
 
     const isCpfOrCnpj = this.cpfAndCnpjProvider.validateCpfOrCnpj({
       cpf_or_cnpj,
     });
 
-    if (!isCpfOrCnpj) throw new AppError('Cpf or Cnpf informed is invalid');
+    if (!isCpfOrCnpj) {
+      if (avatar) this.storageProvider.deleteFile(avatar);
+      throw new AppError('Cpf or Cnpf informed is invalid');
+    }
 
     const { type } = isCpfOrCnpj;
 
@@ -122,11 +147,14 @@ class CreateBusinessService {
 
     if (cpfOrCnpjBusiness) {
       if (stripCpfOrCnpj.length === 11) {
-        if (cpfOrCnpjBusiness.user_id !== user_id)
+        if (cpfOrCnpjBusiness.user_id !== user_id) {
+          if (avatar) this.storageProvider.deleteFile(avatar);
           throw new AppError(
             'CPF registered at another business for another user',
           );
+        }
       } else {
+        if (avatar) this.storageProvider.deleteFile(avatar);
         throw new AppError('CNPJ registered at another business');
       }
     }
@@ -134,17 +162,6 @@ class CreateBusinessService {
     const formattedCategory = categories.map(findCategory => ({
       name: findCategory.toLowerCase(),
     }));
-
-    const cached = await this.cacheProvider.recover<string>(
-      `avatar-tmp-business:${user_id}`,
-    );
-
-    let avatar: string | undefined;
-    if (cached) {
-      avatar = cached;
-
-      await this.cacheProvider.remove(`avatar-tmp-business:${user_id}`);
-    }
 
     const business = await this.businessRepository.create({
       user_id,

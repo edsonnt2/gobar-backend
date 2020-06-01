@@ -28,7 +28,7 @@ describe('UpdatedAvatarBusiness', () => {
       avatarFilename: 'avatar.jpg',
     });
 
-    expect(avatarBusiness.avatar).toBe('avatar.jpg');
+    expect(avatarBusiness).toBe('avatar.jpg');
   });
 
   it('should be able to update avatar with business', async () => {

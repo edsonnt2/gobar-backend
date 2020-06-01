@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import AppError from '@shared/error/AppError';
 import FakeCacheProvider from '@shared/provider/CacheProvider/fakes/FakeCacheProvider';
 import FakeAuthProvider from '@shared/provider/AuthProvider/fakes/FakeAuthProvider';
+import FakeStorageProvider from '@shared/provider/StorageProvider/fakes/FakeStorageProvider';
 import FakeBusinessRepository from '../repositories/fakes/FakeBusinessRepository';
 import FakeCpfAndCnpjProvider from '../provider/fakes/FakeCpfAndCnpjProvider';
 import CreateBusinessService from './CreateBusinessService';
@@ -10,6 +11,7 @@ let fakeBusinessRepository: FakeBusinessRepository;
 let fakeCpfAndCnpjProvider: FakeCpfAndCnpjProvider;
 let fakeCacheProvider: FakeCacheProvider;
 let fakeAuthProvider: FakeAuthProvider;
+let fakeStorageProvider: FakeStorageProvider;
 let createBusinessService: CreateBusinessService;
 
 describe('CreateBusiness', () => {
@@ -18,11 +20,13 @@ describe('CreateBusiness', () => {
     fakeCpfAndCnpjProvider = new FakeCpfAndCnpjProvider();
     fakeCacheProvider = new FakeCacheProvider();
     fakeAuthProvider = new FakeAuthProvider();
+    fakeStorageProvider = new FakeStorageProvider();
     createBusinessService = new CreateBusinessService(
       fakeBusinessRepository,
       fakeCpfAndCnpjProvider,
       fakeCacheProvider,
       fakeAuthProvider,
+      fakeStorageProvider,
     );
   });
 
@@ -30,7 +34,7 @@ describe('CreateBusiness', () => {
     const business = await createBusinessService.execute({
       user_id: 'user-id',
       name: 'New Business',
-      category: ['bares'],
+      categories: ['bares'],
       cell_phone: '19999990999',
       phone: '1933330333',
       cpf_or_cnpj: '889.786.230-69',
@@ -54,7 +58,7 @@ describe('CreateBusiness', () => {
     const business = await createBusinessService.execute({
       user_id: 'user-id',
       name: 'New Business',
-      category: ['bares'],
+      categories: ['bares'],
       cell_phone: '19999999999',
       phone: '1933333333',
       cpf_or_cnpj: '889.786.230-69',
@@ -76,7 +80,7 @@ describe('CreateBusiness', () => {
     const business = await createBusinessService.execute({
       user_id: 'user-id',
       name: 'New Business',
-      category: ['bares'],
+      categories: ['bares'],
       cpf_or_cnpj: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,
@@ -94,7 +98,7 @@ describe('CreateBusiness', () => {
     await createBusinessService.execute({
       user_id: 'user-id',
       name: 'New Business',
-      category: ['bares'],
+      categories: ['bares'],
       cell_phone: '19999999996',
       phone: '1933333333',
       cpf_or_cnpj: '889.786.230-69',
@@ -110,7 +114,7 @@ describe('CreateBusiness', () => {
     const business = await createBusinessService.execute({
       user_id: 'user-id',
       name: 'New Business Two',
-      category: ['bares'],
+      categories: ['bares'],
       cell_phone: '19999999997',
       phone: '1933333332',
       cpf_or_cnpj: '889.786.230-69',
@@ -131,7 +135,7 @@ describe('CreateBusiness', () => {
     await createBusinessService.execute({
       user_id: 'user-id',
       name: 'New Business',
-      category: ['bares'],
+      categories: ['bares'],
       cell_phone: '19999999999',
       phone: '1933333333',
       cpf_or_cnpj: '889.786.230-69',
@@ -148,7 +152,7 @@ describe('CreateBusiness', () => {
       createBusinessService.execute({
         user_id: 'user-id',
         name: 'New Business',
-        category: ['bares'],
+        categories: ['bares'],
         cell_phone: '19999999999',
         phone: '1933333333',
         cpf_or_cnpj: '889.786.230-69',
@@ -167,7 +171,7 @@ describe('CreateBusiness', () => {
     await createBusinessService.execute({
       user_id: 'user-id',
       name: 'New Business',
-      category: ['bares'],
+      categories: ['bares'],
       cell_phone: '(19) 99999-9999',
       phone: '1933333333',
       cpf_or_cnpj: '889.786.230-69',
@@ -184,7 +188,7 @@ describe('CreateBusiness', () => {
       createBusinessService.execute({
         user_id: 'other-user-id',
         name: 'New Business Two',
-        category: ['bares'],
+        categories: ['bares'],
         cell_phone: '19999999999',
         phone: '1933333333',
         cpf_or_cnpj: '889.786.230-69',
@@ -203,7 +207,7 @@ describe('CreateBusiness', () => {
     await createBusinessService.execute({
       user_id: 'user-id',
       name: 'New Business',
-      category: ['bares'],
+      categories: ['bares'],
       cell_phone: '19999999996',
       phone: '1933333333',
       cpf_or_cnpj: '889.786.230-69',
@@ -220,7 +224,7 @@ describe('CreateBusiness', () => {
       createBusinessService.execute({
         user_id: 'other-user-id',
         name: 'New Business Two',
-        category: ['bares'],
+        categories: ['bares'],
         cell_phone: '19999999997',
         phone: '1933333333',
         cpf_or_cnpj: '889.786.230-69',
@@ -240,7 +244,7 @@ describe('CreateBusiness', () => {
       createBusinessService.execute({
         user_id: 'user-id',
         name: 'New Business',
-        category: ['bares'],
+        categories: ['bares'],
         cell_phone: '19999999996',
         phone: '1933333333',
         cpf_or_cnpj: 'invalid-cpf-or-cnpj',
@@ -259,7 +263,7 @@ describe('CreateBusiness', () => {
     await createBusinessService.execute({
       user_id: 'user-id',
       name: 'New Business',
-      category: ['bares'],
+      categories: ['bares'],
       cell_phone: '19999999996',
       phone: '1933333333',
       cpf_or_cnpj: '889.786.230-69',
@@ -276,7 +280,7 @@ describe('CreateBusiness', () => {
       createBusinessService.execute({
         user_id: 'outher-user-id',
         name: 'New Business Two',
-        category: ['bares'],
+        categories: ['bares'],
         cell_phone: '19999999997',
         phone: '1933333332',
         cpf_or_cnpj: '889.786.230-69',
@@ -295,7 +299,7 @@ describe('CreateBusiness', () => {
     await createBusinessService.execute({
       user_id: 'user-id',
       name: 'New Business',
-      category: ['bares'],
+      categories: ['bares'],
       cell_phone: '19999999996',
       phone: '1933333333',
       cpf_or_cnpj: '51874860073230',
@@ -312,7 +316,7 @@ describe('CreateBusiness', () => {
       createBusinessService.execute({
         user_id: 'outher-user-id',
         name: 'New Business Two',
-        category: ['bares'],
+        categories: ['bares'],
         cell_phone: '19999999997',
         phone: '1933333332',
         cpf_or_cnpj: '51874860073230',
