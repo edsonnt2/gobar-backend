@@ -1,3 +1,5 @@
+import { Expose } from 'class-transformer';
+
 import {
   Entity,
   Column,
@@ -9,6 +11,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import User from '@modules/users/infra/typeorm/entities/User';
+import Product from '@modules/products/infra/typeorm/entities/Product';
 import BusinessCategory from './BusinessCategory';
 
 @Entity('business')
@@ -35,6 +38,9 @@ export default class Business {
     },
   )
   business_category: BusinessCategory[];
+
+  @OneToMany(() => Product, product => product.business, { eager: true })
+  product: Product[];
 
   @Column()
   avatar: string;
@@ -74,4 +80,9 @@ export default class Business {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Expose({ name: 'avatar_url' })
+  getAvatarUrl(): string | null {
+    return this.avatar ? `${process.env.URL_HOST}/file/${this.avatar}` : null;
+  }
 }

@@ -28,7 +28,7 @@ describe('UpdatedAvatarBusiness', () => {
       avatarFilename: 'avatar.jpg',
     });
 
-    expect(avatarBusiness).toBe('avatar.jpg');
+    expect(avatarBusiness.avatar).toBe('avatar.jpg');
   });
 
   it('should be able to update avatar with business', async () => {
@@ -96,7 +96,7 @@ describe('UpdatedAvatarBusiness', () => {
     expect(deleteFile).toHaveBeenCalledWith('avatar.jpg');
   });
 
-  it('should be able to update avatar without business', async () => {
+  it('should be able to update avatar without business after other update', async () => {
     const deleteFile = jest.spyOn(fakeStorageProvider, 'deleteFile');
     const avatarBusiness = await updateAvatarBusinessService.execute({
       user_id: 'user-id',

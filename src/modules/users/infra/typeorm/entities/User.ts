@@ -1,3 +1,4 @@
+import { Exclude, Expose } from 'class-transformer';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -23,6 +24,7 @@ export default class User {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column()
@@ -31,7 +33,7 @@ export default class User {
   @Column()
   birthDate: string;
 
-  @OneToMany(() => Business, business => business.user)
+  @OneToMany(() => Business, business => business.user, { eager: true })
   business: Business[];
 
   @CreateDateColumn()
@@ -39,4 +41,9 @@ export default class User {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Expose({ name: 'avatar_url' })
+  getAvatarUrl(): string | null {
+    return this.avatar ? `${process.env.URL_HOST}/file/${this.avatar}` : null;
+  }
 }

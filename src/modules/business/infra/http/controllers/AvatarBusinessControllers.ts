@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import UpdateAvatarBusinessService from '@modules/business/services/UpdateAvatarBusinessService';
+import { classToClass } from 'class-transformer';
 
-export default class UsersControllers {
+export default class AvatarBusinessControllers {
   public async update(req: Request, res: Response): Promise<Response> {
     const updateAvatarBusinessService = container.resolve(
       UpdateAvatarBusinessService,
@@ -14,6 +15,6 @@ export default class UsersControllers {
       avatarFilename: req.file.filename,
     });
 
-    return res.json(businessOrAvatar);
+    return res.json(classToClass(businessOrAvatar));
   }
 }

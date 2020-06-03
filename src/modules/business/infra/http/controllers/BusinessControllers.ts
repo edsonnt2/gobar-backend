@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import CreateBusinessService from '@modules/business/services/CreateBusinessService';
+import { classToClass } from 'class-transformer';
 
-export default class UsersControllers {
+export default class BusinessControllers {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
       name,
@@ -37,6 +38,6 @@ export default class UsersControllers {
       state,
     });
 
-    return res.json({ business, token });
+    return res.json({ business: classToClass(business), token });
   }
 }

@@ -148,6 +148,9 @@ describe('CreateBusiness', () => {
       state: 'State Test',
     });
 
+    const avatar = await fakeStorageProvider.saveFile('avatar.jpg');
+    await fakeCacheProvider.save('avatar-tmp-business:user-id', avatar);
+
     await expect(
       createBusinessService.execute({
         user_id: 'user-id',
