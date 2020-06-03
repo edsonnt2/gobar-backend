@@ -4,7 +4,12 @@
 
 **An application for companies and customers that allows complete business management and allows the customer to locate these transactions on a map and that he can order orders when present on the spot and track all expenses**
 
-# 🚀️ Technologies
+<p align="center">
+<img src="https://img.shields.io/github/issues/edsonnt2/new-gerabar-backend?style=plastic" alt="issues">
+<img src="https://img.shields.io/github/license/edsonnt2/new-gerabar-backend?style=plastic" alt="License">
+</p>
+
+## 🚀️ Technologies
 
 This project is being developed with the following technologies:
 
@@ -26,7 +31,7 @@ This project is being developed with the following technologies:
 - [TS-node](https://github.com/TypeStrong/ts-node)
 - [VS Code](https://code.visualstudio.com/) with [Eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint), [Prettier](https://prettier.io/) and [Editorconfig](https://editorconfig.org/)
 
-# 📝️ License
+## 📝️ License
 
 This project is under the MIT license. See the LICENSE for more information.
 
