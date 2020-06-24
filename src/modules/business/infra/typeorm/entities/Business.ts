@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import User from '@modules/users/infra/typeorm/entities/User';
 import Product from '@modules/products/infra/typeorm/entities/Product';
+import Ingress from '@modules/ingress/infra/typeorm/entities/Ingress';
 import BusinessCategory from './BusinessCategory';
 
 @Entity('business')
@@ -39,8 +40,11 @@ export default class Business {
   )
   business_category: BusinessCategory[];
 
-  @OneToMany(() => Product, product => product.business, { eager: true })
+  @OneToMany(() => Product, product => product.business)
   product: Product[];
+
+  @OneToMany(() => Ingress, ingress => ingress.business)
+  ingress: Ingress[];
 
   @Column()
   avatar: string;
@@ -57,7 +61,7 @@ export default class Business {
   @Column()
   zip_code: string;
 
-  @Column()
+  @Column('decimal')
   number: number;
 
   @Column()

@@ -1,6 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/error/AppError';
 import IStorageProvider from '@shared/provider/StorageProvider/models/IStorageProvider';
+import IBusinessRepository from '@modules/business/repositories/IBusinessRepository';
 import Product from '../infra/typeorm/entities/Product';
 import IProductRepository from '../repositories/IProductRepository';
 
@@ -24,6 +25,9 @@ class CreateProductService {
     @inject('ProductRepository')
     private productRepository: IProductRepository,
 
+    @inject('BusinessRepository')
+    private businessRepository: IBusinessRepository,
+
     @inject('StorageProvider')
     private storageProvider: IStorageProvider,
   ) {}
@@ -41,6 +45,10 @@ class CreateProductService {
     porcent,
     sale_value,
   }: IRequest): Promise<Product> {
+    const business = await this.businessRepository.findById(business_id);
+
+    if (!business) throw new AppError('Business not found');
+
     const descriptionProduct = await this.productRepository.findInProduct({
       find: description,
       where: 'description',

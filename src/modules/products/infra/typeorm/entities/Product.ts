@@ -45,7 +45,7 @@ export default class Product {
   @JoinColumn({ name: 'category_id' })
   category: CategoryProduct;
 
-  @Column('integer')
+  @Column('decimal')
   quantity: number;
 
   @Column('uuid')
@@ -74,7 +74,7 @@ export default class Product {
   })
   pushase_value: number;
 
-  @Column('integer')
+  @Column('decimal')
   porcent?: number;
 
   @Column('decimal', {

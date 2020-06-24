@@ -8,7 +8,7 @@ import ImageProductsControllers from '../controllers/ImageProductsControllers';
 import CategoryProductControllers from '../controllers/CategoryProductControllers';
 import CategoryProviderControllers from '../controllers/CategoryProviderControllers';
 
-const productRouter = Router();
+const ProductRouter = Router();
 const productsControllers = new ProductsControllers();
 const imageProductsControllers = new ImageProductsControllers();
 const categoryProductControllers = new CategoryProductControllers();
@@ -16,30 +16,30 @@ const categoryProviderControllers = new CategoryProviderControllers();
 
 const upload = multer(configUpload.multer);
 
-productRouter.post(
+ProductRouter.post(
   '/',
   upload.single('image'),
   validatorsProduct.productCreate,
   productsControllers.create,
 );
 
-productRouter.patch(
+ProductRouter.patch(
   '/image',
   validatorsProduct.productImage,
   upload.single('image'),
   imageProductsControllers.update,
 );
 
-productRouter.get(
+ProductRouter.get(
   '/categories/search-product',
   validatorsProduct.searchCategory,
   categoryProductControllers.index,
 );
 
-productRouter.get(
+ProductRouter.get(
   '/categories/search-provider',
   validatorsProduct.searchCategory,
   categoryProviderControllers.index,
 );
 
-export default productRouter;
+export default ProductRouter;

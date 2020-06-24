@@ -19,13 +19,25 @@ app.use(routes);
 
 app.use(errors());
 
-app.use((err: Error, req: Request, res: Response, _Next: NextFunction) => {
+interface IError extends Error {
+  code: string;
+}
+
+app.use((err: IError, req: Request, res: Response, _Next: NextFunction) => {
   if (err instanceof AppError) {
     return res.status(err.code).json({
       status: 'error',
       message: err.message,
     });
   }
+
+  if (err.code === '22P02') {
+    return res.status(404).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
+
   // eslint-disable-next-line
   console.log(err);
 

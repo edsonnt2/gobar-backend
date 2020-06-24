@@ -3,13 +3,13 @@ import { Router } from 'express';
 import CategoriesControllers from '../controllers/CategoriesControllers';
 import validatorsCategory from '../validators/categoryValidators';
 
-const categoryRouter = Router();
+const CategoryRouter = Router();
 const categoryControllers = new CategoriesControllers();
 
-categoryRouter.get(
+CategoryRouter.get(
   '/search',
   validatorsCategory.search,
   categoryControllers.index,
 );
 
-export default categoryRouter;
+export default CategoryRouter;

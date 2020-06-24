@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import Business from '@modules/business/infra/typeorm/entities/Business';
 import ICreateBusinessDTO from '@modules/business/Dtos/ICreateBusinessDTO';
 import IFindInBusinessDTO from '@modules/business/Dtos/IFindInBusinessDTO';
@@ -9,7 +10,9 @@ class FakeBusinessRepository implements IBusinessRepository {
   public async create(data: ICreateBusinessDTO): Promise<Business> {
     const getBusiness = new Business();
 
-    Object.assign(getBusiness, { id: '274234498fsdf34548' }, data);
+    const id = crypto.randomBytes(10).toString('hex');
+
+    Object.assign(getBusiness, { id }, data);
 
     this.business.push(getBusiness);
 
