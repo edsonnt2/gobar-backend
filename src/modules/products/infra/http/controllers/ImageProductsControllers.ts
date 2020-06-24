@@ -10,12 +10,12 @@ export default class ImageProductsControllers {
       UpdateImageProductService,
     );
 
-    const productOrAvatar = await updateImageProductService.execute({
+    const product = await updateImageProductService.execute({
       business_id: req.business.id,
       imageFilename: req.file.filename,
-      ...(product_id && { product_id: String(product_id) }),
+      product_id: String(product_id),
     });
 
-    return res.json(classToClass(productOrAvatar));
+    return res.json(classToClass(product));
   }
 }

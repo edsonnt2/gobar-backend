@@ -1,18 +1,18 @@
 import AppError from '@shared/error/AppError';
 import FakeUserRepository from '@modules/users/repositories/fakes/FakeUserRepository';
-import FakeCategoryRepository from '../repositories/fakes/FakeCategoryRepository';
-import SearchCategoryService from './SearchCategoryService';
+import FakeCategoryProductRepository from '../repositories/fakes/FakeCategoryProductRepository';
+import SearchCategoryProductService from './SearchCategoryProductService';
 
-let fakeCategoryRepository: FakeCategoryRepository;
+let fakeCategoryProductRepository: FakeCategoryProductRepository;
 let fakeUserRepository: FakeUserRepository;
-let searchCategoryService: SearchCategoryService;
+let searchCategoryProductService: SearchCategoryProductService;
 
 describe('SearchCategory', () => {
   beforeEach(() => {
-    fakeCategoryRepository = new FakeCategoryRepository();
+    fakeCategoryProductRepository = new FakeCategoryProductRepository();
     fakeUserRepository = new FakeUserRepository();
-    searchCategoryService = new SearchCategoryService(
-      fakeCategoryRepository,
+    searchCategoryProductService = new SearchCategoryProductService(
+      fakeCategoryProductRepository,
       fakeUserRepository,
     );
   });
@@ -26,12 +26,12 @@ describe('SearchCategory', () => {
       birthDate: '1991-09-08',
     });
 
-    const categories = await fakeCategoryRepository.create([
+    const categories = await fakeCategoryProductRepository.create([
       { name: 'teste' },
       { name: 'teste 2' },
     ]);
 
-    const searchCategories = await searchCategoryService.execute({
+    const searchCategories = await searchCategoryProductService.execute({
       user_id: user.id,
       search: 'tes',
     });
@@ -41,7 +41,7 @@ describe('SearchCategory', () => {
 
   it('should not be able to make the search in categories with non-exists-user.', async () => {
     await expect(
-      searchCategoryService.execute({
+      searchCategoryProductService.execute({
         user_id: 'non-existis-user',
         search: 'tes',
       }),

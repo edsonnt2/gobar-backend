@@ -1,12 +1,12 @@
 import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/error/AppError';
 import IStorageProvider from '@shared/provider/StorageProvider/models/IStorageProvider';
-import ICacheProvider from '@shared/provider/CacheProvider/models/ICacheProvider';
 import Product from '../infra/typeorm/entities/Product';
 import IProductRepository from '../repositories/IProductRepository';
 
 interface IRequest {
   business_id: string;
+  image?: string;
   description: string;
   category: string;
   quantity: number;
@@ -24,15 +24,13 @@ class CreateProductService {
     @inject('ProductRepository')
     private productRepository: IProductRepository,
 
-    @inject('CacheProvider')
-    private cacheProvider: ICacheProvider,
-
     @inject('StorageProvider')
     private storageProvider: IStorageProvider,
   ) {}
 
   public async execute({
     business_id,
+    image,
     description,
     category,
     quantity,
@@ -49,19 +47,7 @@ class CreateProductService {
       business_id,
     });
 
-    const cached = await this.cacheProvider.recover<string>(
-      `image-tmp-product:${business_id}`,
-    );
-
-    let image: string | undefined;
-    if (cached) {
-      image = cached;
-
-      await this.cacheProvider.remove(`image-tmp-product:${business_id}`);
-    }
-
     if (descriptionProduct) {
-      if (image) this.storageProvider.deleteFile(image);
       throw new AppError('Description already registered');
     }
 
@@ -72,7 +58,6 @@ class CreateProductService {
     });
 
     if (internalCodeProduct) {
-      if (image) this.storageProvider.deleteFile(image);
       throw new AppError('Internal code already registered');
     }
 
@@ -84,10 +69,11 @@ class CreateProductService {
       });
 
       if (barcodeProduct) {
-        if (image) this.storageProvider.deleteFile(image);
         throw new AppError('Barcode already registered');
       }
     }
+
+    if (image) await this.storageProvider.saveFile(image);
 
     const product = await this.productRepository.create({
       business_id,

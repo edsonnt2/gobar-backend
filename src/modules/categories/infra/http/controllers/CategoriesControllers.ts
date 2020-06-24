@@ -9,7 +9,7 @@ export default class CategoryControllers {
 
     const categories = await searchCategoryService.execute({
       user_id: req.user.id,
-      search: search.toString(),
+      search: String(search),
     });
 
     return res.json(categories);

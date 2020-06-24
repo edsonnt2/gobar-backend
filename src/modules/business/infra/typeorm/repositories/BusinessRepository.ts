@@ -81,7 +81,7 @@ class BusinessRepository implements IBUsinessRepository {
   }
 
   public async findById(id: string): Promise<Business | undefined> {
-    const business = await this.ormRepository.findOne(id);
+    const business = await this.ormRepository.findOne({ id });
 
     return business;
   }

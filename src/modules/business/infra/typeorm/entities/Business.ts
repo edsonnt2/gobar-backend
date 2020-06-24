@@ -75,6 +75,9 @@ export default class Business {
   @Column()
   state: string;
 
+  @Column()
+  table?: number;
+
   @CreateDateColumn()
   created_at: Date;
 

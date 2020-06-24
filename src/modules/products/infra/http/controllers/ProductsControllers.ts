@@ -17,19 +17,22 @@ export default class ProductsControllers {
       sale_value,
     } = req.body;
 
+    const image = req.file ? req.file.filename : undefined;
+
     const createProductService = container.resolve(CreateProductService);
 
     const product = await createProductService.execute({
+      image,
       business_id: req.business.id,
       description,
       category,
-      quantity,
+      quantity: Number(quantity),
       provider,
       internal_code,
       barcode,
-      pushase_value,
-      porcent,
-      sale_value,
+      pushase_value: Number(pushase_value),
+      porcent: porcent && Number(porcent),
+      sale_value: Number(sale_value),
     });
 
     return res.json(classToClass(product));

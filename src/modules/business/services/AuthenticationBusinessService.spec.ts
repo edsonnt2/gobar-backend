@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import AppError from '@shared/error/AppError';
 import FakeAuthProvider from '@shared/provider/AuthProvider/fakes/FakeAuthProvider';
 import FakeUserRepository from '@modules/users/repositories/fakes/FakeUserRepository';

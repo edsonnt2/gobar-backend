@@ -21,7 +21,7 @@ class FakeCategoryRepository implements ICategoryRepository {
   public async searchInCategory(search: string): Promise<Category[]> {
     const categories = await this.ormRepository.find({
       where: {
-        name: Like(`%${search}%`),
+        name: Like(`%${search.toLowerCase()}%`),
       },
       take: 15,
     });

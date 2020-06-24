@@ -2,12 +2,12 @@ import ICreateBusinessDTO from '../Dtos/ICreateBusinessDTO';
 import Business from '../infra/typeorm/entities/Business';
 import IFindInBusinessDTO from '../Dtos/IFindInBusinessDTO';
 
-export default interface ICreateBusiness {
+export default interface IBusinessRepository {
   create({
     user_id,
     avatar,
     name,
-    category,
+    categories,
     cell_phone,
     phone,
     cpf_or_cnpj,

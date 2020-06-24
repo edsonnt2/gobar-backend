@@ -4,11 +4,7 @@ export default {
   businessCreate: celebrate({
     [Segments.BODY]: {
       name: Joi.string().required(),
-      categories: Joi.array()
-        .items(Joi.string().required())
-        .min(1)
-        .max(4)
-        .required(),
+      categories: Joi.string().required(),
       cell_phone: Joi.string(),
       phone: Joi.string(),
       cpf_or_cnpj: Joi.string().required().min(14).max(18).trim(),
@@ -21,9 +17,14 @@ export default {
       state: Joi.string().required(),
     },
   }),
-  bussinessSessions: celebrate({
+  businessSessions: celebrate({
     [Segments.BODY]: {
       business_id: Joi.string().required(),
+    },
+  }),
+  businessTable: celebrate({
+    [Segments.BODY]: {
+      table: Joi.number().required(),
     },
   }),
 };

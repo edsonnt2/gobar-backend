@@ -2,7 +2,7 @@ import ICreateProductDTO from '../Dtos/ICreateProductDTO';
 import Product from '../infra/typeorm/entities/Product';
 import IFindInProductDTO from '../Dtos/IFindInProductDTO';
 
-export default interface ICreateBusiness {
+export default interface IProductRepository {
   create({
     business_id,
     image,
