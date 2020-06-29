@@ -1,8 +1,8 @@
 import AppError from '@shared/error/AppError';
 import FakeAuthProvider from '@shared/provider/AuthProvider/fakes/FakeAuthProvider';
 import FakeStorageProvider from '@shared/provider/StorageProvider/fakes/FakeStorageProvider';
+import FakeCpfAndCnpjProvider from '@shared/provider/CpfOrCnpjProvider/fakes/FakeCpfAndCnpjProvider';
 import FakeBusinessRepository from '../repositories/fakes/FakeBusinessRepository';
-import FakeCpfAndCnpjProvider from '../provider/fakes/FakeCpfAndCnpjProvider';
 import CreateBusinessService from './CreateBusinessService';
 
 let fakeBusinessRepository: FakeBusinessRepository;

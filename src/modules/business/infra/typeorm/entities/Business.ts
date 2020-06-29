@@ -56,7 +56,7 @@ export default class Business {
   phone?: number;
 
   @Column()
-  cpf_or_cnpj: string;
+  cpf_or_cnpj: number;
 
   @Column()
   zip_code: string;

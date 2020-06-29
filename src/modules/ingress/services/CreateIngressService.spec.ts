@@ -6,23 +6,22 @@ import CreateIngressService from './CreateIngressService';
 let fakeIngressRepository: FakeIngressRepository;
 let fakeBusinessRepository: FakeBusinessRepository;
 let createIngressService: CreateIngressService;
+let business: { id: string };
 
 describe('CreateIngress', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     fakeIngressRepository = new FakeIngressRepository();
     fakeBusinessRepository = new FakeBusinessRepository();
     createIngressService = new CreateIngressService(
       fakeIngressRepository,
       fakeBusinessRepository,
     );
-  });
 
-  it('should be able to create a new ingress', async () => {
-    const business = await fakeBusinessRepository.create({
+    business = await fakeBusinessRepository.create({
       user_id: 'user-id',
       name: 'New Business',
       categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: '889.786.230-69',
+      cpf_or_cnpj: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
@@ -30,7 +29,9 @@ describe('CreateIngress', () => {
       city: 'City Test',
       state: 'State Test',
     });
+  });
 
+  it('should be able to create a new ingress', async () => {
     const ingress = await createIngressService.execute({
       business_id: business.id,
       description: 'New Ingress',
@@ -53,19 +54,6 @@ describe('CreateIngress', () => {
   });
 
   it('should not be able to create a new ingress with description already register in business', async () => {
-    const business = await fakeBusinessRepository.create({
-      user_id: 'user-id',
-      name: 'New Business',
-      categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: '889.786.230-69',
-      zip_code: '99999-999',
-      number: 9,
-      street: 'Rua test',
-      district: 'District Test',
-      city: 'City Test',
-      state: 'State Test',
-    });
-
     const ingress = await createIngressService.execute({
       business_id: business.id,
       description: 'New Ingress',

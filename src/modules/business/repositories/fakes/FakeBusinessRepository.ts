@@ -24,7 +24,9 @@ class FakeBusinessRepository implements IBusinessRepository {
     where,
   }: IFindInBusinessDTO): Promise<Business | undefined> {
     const newFind =
-      where === 'cell_phone' || where === 'phone' ? Number(find) : find;
+      where === 'cell_phone' || where === 'phone' || where === 'cpf_or_cnpj'
+        ? Number(find)
+        : find;
 
     const getBusiness = this.business.find(
       findBusiness => findBusiness[where] === newFind,
@@ -35,6 +37,14 @@ class FakeBusinessRepository implements IBusinessRepository {
 
   public async findById(id: string): Promise<Business | undefined> {
     const business = this.business.find(findBusiness => findBusiness.id === id);
+
+    return business;
+  }
+
+  public async findByUserId(user_id: string): Promise<Business[]> {
+    const business = this.business.filter(
+      findBusiness => findBusiness.user_id === user_id,
+    );
 
     return business;
   }

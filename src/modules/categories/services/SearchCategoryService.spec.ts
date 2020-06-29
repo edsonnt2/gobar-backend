@@ -19,7 +19,7 @@ describe('SearchCategory', () => {
 
   it('should be able to make the search in categories.', async () => {
     const user = await fakeUserRepository.create({
-      full_name: 'Name Test',
+      name: 'Name Test',
       email: 'test@test.com',
       cell_phone: 12999999999,
       password: 'new-password',

@@ -6,25 +6,22 @@ import DeleteIngressService from './DeleteIngressService';
 let fakeIngressRepository: FakeIngressRepository;
 let fakeBusinessRepository: FakeBusinessRepository;
 let deleteIngressService: DeleteIngressService;
+let business: { id: string };
 
 describe('DeleteIngress', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     fakeIngressRepository = new FakeIngressRepository();
     fakeBusinessRepository = new FakeBusinessRepository();
     deleteIngressService = new DeleteIngressService(
       fakeIngressRepository,
       fakeBusinessRepository,
     );
-  });
 
-  it('should be able to delete ingress for id', async () => {
-    const deleteById = jest.spyOn(fakeIngressRepository, 'deleteById');
-
-    const business = await fakeBusinessRepository.create({
+    business = await fakeBusinessRepository.create({
       user_id: 'user-id',
       name: 'New Business',
       categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: '889.786.230-69',
+      cpf_or_cnpj: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
@@ -32,6 +29,10 @@ describe('DeleteIngress', () => {
       city: 'City Test',
       state: 'State Test',
     });
+  });
+
+  it('should be able to delete ingress for id', async () => {
+    const deleteById = jest.spyOn(fakeIngressRepository, 'deleteById');
 
     const newIngress = await fakeIngressRepository.create({
       business_id: business.id,
@@ -58,19 +59,6 @@ describe('DeleteIngress', () => {
   });
 
   it('should not be able to delete ingress with ingress no-exists', async () => {
-    const business = await fakeBusinessRepository.create({
-      user_id: 'user-id',
-      name: 'New Business',
-      categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: '889.786.230-69',
-      zip_code: '99999-999',
-      number: 9,
-      street: 'Rua test',
-      district: 'District Test',
-      city: 'City Test',
-      state: 'State Test',
-    });
-
     await expect(
       deleteIngressService.execute({
         id: 'id-ingress-delete',
@@ -84,7 +72,7 @@ describe('DeleteIngress', () => {
       user_id: 'user-id',
       name: 'New Business One',
       categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: '889.786.230-69',
+      cpf_or_cnpj: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
@@ -97,7 +85,7 @@ describe('DeleteIngress', () => {
       user_id: 'user-id',
       name: 'New Business Two',
       categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: '889.786.230-69',
+      cpf_or_cnpj: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',

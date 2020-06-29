@@ -2,9 +2,9 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/error/AppError';
 import IAuthProvider from '@shared/provider/AuthProvider/models/IAuthProvider';
 import IStorageProvider from '@shared/provider/StorageProvider/models/IStorageProvider';
+import ICpfAndCnpjProvider from '@shared/provider/CpfOrCnpjProvider/models/ICpfAndCnpjProvider';
 import IBusinessRepository from '../repositories/IBusinessRepository';
 import Business from '../infra/typeorm/entities/Business';
-import ICpfAndCnpjProvider from '../provider/models/ICpfAndCnpjProvider';
 
 interface IRequest {
   user_id: string;
@@ -122,13 +122,8 @@ class CreateBusinessService {
       type,
     });
 
-    const formatedCpfOrCnpj = this.cpfAndCnpjProvider.formatCpfOrCnpj({
-      cpf_or_cnpj: stripCpfOrCnpj,
-      type,
-    });
-
     const cpfOrCnpjBusiness = await this.businessRepository.findInBusiness({
-      find: formatedCpfOrCnpj,
+      find: stripCpfOrCnpj,
       where: 'cpf_or_cnpj',
     });
 
@@ -151,9 +146,7 @@ class CreateBusinessService {
       avatar,
       name,
       categories: formattedCategory,
-      cpf_or_cnpj: formatedCpfOrCnpj,
-      cell_phone: Number(formattedCellPhone),
-      phone: Number(formattedPhone),
+      cpf_or_cnpj: Number(stripCpfOrCnpj),
       zip_code,
       street,
       number,
@@ -161,6 +154,8 @@ class CreateBusinessService {
       district,
       city,
       state,
+      ...(formattedCellPhone && { cell_phone: Number(formattedCellPhone) }),
+      ...(formattedPhone && { phone: Number(formattedPhone) }),
     });
 
     const token = this.authProvider.signIn({

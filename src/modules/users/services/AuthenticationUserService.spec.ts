@@ -24,7 +24,7 @@ describe('AuthenticationUser', () => {
 
   it('should be able to make the login in app.', async () => {
     await fakeUserRepository.create({
-      full_name: 'Name Test',
+      name: 'Name Test',
       email: 'test@test.com',
       cell_phone: 12999999999,
       password: 'new-password',
@@ -47,7 +47,7 @@ describe('AuthenticationUser', () => {
 
   it('should not be able to make the login with cell phone or email incorrect.', async () => {
     await fakeUserRepository.create({
-      full_name: 'Name Test',
+      name: 'Name Test',
       email: 'test@test.com',
       cell_phone: 12999999999,
       password: 'new-password',
@@ -71,7 +71,7 @@ describe('AuthenticationUser', () => {
 
   it('should not be able to make the login with password incorrect.', async () => {
     await fakeUserRepository.create({
-      full_name: 'Name Test',
+      name: 'Name Test',
       email: 'test@test.com',
       cell_phone: 12999999999,
       password: 'new-password',

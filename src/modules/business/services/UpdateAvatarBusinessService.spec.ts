@@ -6,23 +6,22 @@ import UpdateAvatarBusinessService from './UpdateAvatarBusinessService';
 let fakeBusinessRepository: FakeBusinessRepository;
 let fakeStorageProvider: FakeStorageProvider;
 let updateAvatarBusinessService: UpdateAvatarBusinessService;
+let business: { id: string };
 
 describe('UpdatedAvatarBusiness', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     fakeBusinessRepository = new FakeBusinessRepository();
     fakeStorageProvider = new FakeStorageProvider();
     updateAvatarBusinessService = new UpdateAvatarBusinessService(
       fakeBusinessRepository,
       fakeStorageProvider,
     );
-  });
 
-  it('should be able to update avatar with business', async () => {
-    const business = await fakeBusinessRepository.create({
+    business = await fakeBusinessRepository.create({
       user_id: 'user-id',
       name: 'New Business',
       categories: [{ name: 'bares' }],
-      cpf_or_cnpj: '889.786.230-69',
+      cpf_or_cnpj: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
@@ -30,7 +29,9 @@ describe('UpdatedAvatarBusiness', () => {
       city: 'City Test',
       state: 'State Test',
     });
+  });
 
+  it('should be able to update avatar with business', async () => {
     const avatarBusiness = await updateAvatarBusinessService.execute({
       user_id: 'user-id',
       business_id: business.id,
@@ -51,19 +52,6 @@ describe('UpdatedAvatarBusiness', () => {
   });
 
   it('should not be able to update avatar with user incorrect', async () => {
-    const business = await fakeBusinessRepository.create({
-      user_id: 'user-id',
-      name: 'New Business',
-      categories: [{ name: 'bares' }],
-      cpf_or_cnpj: '889.786.230-69',
-      zip_code: '99999-999',
-      number: 9,
-      street: 'Rua test',
-      district: 'District Test',
-      city: 'City Test',
-      state: 'State Test',
-    });
-
     await expect(
       updateAvatarBusinessService.execute({
         user_id: 'user-incorrect',
@@ -75,19 +63,6 @@ describe('UpdatedAvatarBusiness', () => {
 
   it('should be able to update avatar and removed old avatar', async () => {
     const deleteFile = jest.spyOn(fakeStorageProvider, 'deleteFile');
-
-    const business = await fakeBusinessRepository.create({
-      user_id: 'user-id',
-      name: 'New Business',
-      categories: [{ name: 'bares' }],
-      cpf_or_cnpj: '889.786.230-69',
-      zip_code: '99999-999',
-      number: 9,
-      street: 'Rua test',
-      district: 'District Test',
-      city: 'City Test',
-      state: 'State Test',
-    });
 
     await updateAvatarBusinessService.execute({
       user_id: 'user-id',

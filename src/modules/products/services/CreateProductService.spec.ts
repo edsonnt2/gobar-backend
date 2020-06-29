@@ -8,9 +8,10 @@ let fakeProductRepository: FakeProductRepository;
 let fakeBusinessRepository: FakeBusinessRepository;
 let fakeStorageProvider: FakeStorageProvider;
 let createProductService: CreateProductService;
+let business: { id: string };
 
 describe('CreateBusiness', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     fakeProductRepository = new FakeProductRepository();
     fakeBusinessRepository = new FakeBusinessRepository();
     fakeStorageProvider = new FakeStorageProvider();
@@ -19,16 +20,12 @@ describe('CreateBusiness', () => {
       fakeBusinessRepository,
       fakeStorageProvider,
     );
-  });
 
-  it('should be able to create a new product', async () => {
-    const saveFile = jest.spyOn(fakeStorageProvider, 'saveFile');
-
-    const business = await fakeBusinessRepository.create({
+    business = await fakeBusinessRepository.create({
       user_id: 'user-id',
       name: 'New Business',
       categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: '889.786.230-69',
+      cpf_or_cnpj: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
@@ -36,6 +33,10 @@ describe('CreateBusiness', () => {
       city: 'City Test',
       state: 'State Test',
     });
+  });
+
+  it('should be able to create a new product', async () => {
+    const saveFile = jest.spyOn(fakeStorageProvider, 'saveFile');
 
     const product = await createProductService.execute({
       image: 'image-product.jpg',
@@ -56,19 +57,6 @@ describe('CreateBusiness', () => {
   });
 
   it('should be able to create a new product without the image.', async () => {
-    const business = await fakeBusinessRepository.create({
-      user_id: 'user-id',
-      name: 'New Business',
-      categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: '889.786.230-69',
-      zip_code: '99999-999',
-      number: 9,
-      street: 'Rua test',
-      district: 'District Test',
-      city: 'City Test',
-      state: 'State Test',
-    });
-
     const product = await createProductService.execute({
       business_id: business.id,
       description: 'Product Fictitious',
@@ -101,19 +89,6 @@ describe('CreateBusiness', () => {
   });
 
   it('should not be able to create a new product with description already registered', async () => {
-    const business = await fakeBusinessRepository.create({
-      user_id: 'user-id',
-      name: 'New Business',
-      categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: '889.786.230-69',
-      zip_code: '99999-999',
-      number: 9,
-      street: 'Rua test',
-      district: 'District Test',
-      city: 'City Test',
-      state: 'State Test',
-    });
-
     await createProductService.execute({
       business_id: business.id,
       description: 'Product Fictitious',
@@ -144,19 +119,6 @@ describe('CreateBusiness', () => {
   });
 
   it('should not be able to create a new product with internal code already registered', async () => {
-    const business = await fakeBusinessRepository.create({
-      user_id: 'user-id',
-      name: 'New Business',
-      categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: '889.786.230-69',
-      zip_code: '99999-999',
-      number: 9,
-      street: 'Rua test',
-      district: 'District Test',
-      city: 'City Test',
-      state: 'State Test',
-    });
-
     await createProductService.execute({
       business_id: business.id,
       description: 'Product Fictitious One',
@@ -187,19 +149,6 @@ describe('CreateBusiness', () => {
   });
 
   it('should not be able to create a new product with barcode already registered', async () => {
-    const business = await fakeBusinessRepository.create({
-      user_id: 'user-id',
-      name: 'New Business',
-      categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: '889.786.230-69',
-      zip_code: '99999-999',
-      number: 9,
-      street: 'Rua test',
-      district: 'District Test',
-      city: 'City Test',
-      state: 'State Test',
-    });
-
     await createProductService.execute({
       business_id: business.id,
       description: 'Product Fictitious One',

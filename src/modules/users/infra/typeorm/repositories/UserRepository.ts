@@ -3,7 +3,7 @@ import ICreateUserDTO from '@modules/users/Dtos/ICreateUserDTO';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import User from '../entities/User';
 
-class FakeUserRepository implements IUserRepository {
+class UserRepository implements IUserRepository {
   private ormRepository: Repository<User>;
 
   constructor() {
@@ -11,18 +11,20 @@ class FakeUserRepository implements IUserRepository {
   }
 
   public async create({
-    full_name,
+    name,
     email,
     cell_phone,
     password,
     birthDate,
+    gender,
   }: ICreateUserDTO): Promise<User> {
     const user = this.ormRepository.create({
-      full_name,
+      name,
       email,
       cell_phone,
       password,
       birthDate,
+      gender,
     });
 
     await this.ormRepository.save(user);
@@ -61,4 +63,4 @@ class FakeUserRepository implements IUserRepository {
   }
 }
 
-export default FakeUserRepository;
+export default UserRepository;

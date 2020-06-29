@@ -7,7 +7,7 @@ import IHashProvider from '../provider/models/IHashProvider';
 import IUserRepository from '../repositories/IUserRepository';
 
 interface IRequest {
-  full_name: string;
+  name: string;
   cell_phone: string;
   email: string;
   password: string;
@@ -28,7 +28,7 @@ class CreateUserService {
   ) {}
 
   public async execute({
-    full_name,
+    name,
     cell_phone,
     email,
     password,
@@ -64,7 +64,7 @@ class CreateUserService {
       throw new AppError('Age minimum for register is 16 Years');
 
     const user = await this.userRepository.create({
-      full_name,
+      name,
       cell_phone: formattedToNumber,
       email,
       password: passwordHashed,

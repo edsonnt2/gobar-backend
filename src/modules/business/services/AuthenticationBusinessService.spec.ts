@@ -8,9 +8,10 @@ let fakeBusinessRepository: FakeBusinessRepository;
 let fakeUserRepository: FakeUserRepository;
 let fakeAuthProvider: FakeAuthProvider;
 let authenticationBusinessService: AuthenticationBusinessService;
+let user: { id: string };
 
 describe('AuthenticationBusiness', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     fakeBusinessRepository = new FakeBusinessRepository();
     fakeUserRepository = new FakeUserRepository();
     fakeAuthProvider = new FakeAuthProvider();
@@ -19,22 +20,22 @@ describe('AuthenticationBusiness', () => {
       fakeUserRepository,
       fakeAuthProvider,
     );
-  });
 
-  it('should be able to make the login in app.', async () => {
-    const user = await fakeUserRepository.create({
-      full_name: 'Name Test',
+    user = await fakeUserRepository.create({
+      name: 'Name Test',
       email: 'test@test.com',
       cell_phone: 12999999999,
       password: 'new-password',
       birthDate: '1991-09-08',
     });
+  });
 
+  it('should be able to make the login in app.', async () => {
     const business = await fakeBusinessRepository.create({
       user_id: user.id,
       name: 'New Business',
       categories: [{ name: 'bares' }],
-      cpf_or_cnpj: '889.786.230-69',
+      cpf_or_cnpj: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
@@ -61,14 +62,6 @@ describe('AuthenticationBusiness', () => {
   });
 
   it('should not be able to make the login with non-existing business.', async () => {
-    const user = await fakeUserRepository.create({
-      full_name: 'Name Test',
-      email: 'test@test.com',
-      cell_phone: 12999999999,
-      password: 'new-password',
-      birthDate: '1991-09-08',
-    });
-
     await expect(
       authenticationBusinessService.execute({
         user_id: user.id,
@@ -78,19 +71,11 @@ describe('AuthenticationBusiness', () => {
   });
 
   it("should not be able to login into another user's business.", async () => {
-    const user = await fakeUserRepository.create({
-      full_name: 'Name Test',
-      email: 'test@test.com',
-      cell_phone: 12999999999,
-      password: 'new-password',
-      birthDate: '1991-09-08',
-    });
-
     const business = await fakeBusinessRepository.create({
       user_id: 'other-user',
       name: 'New Business',
       categories: [{ name: 'bares' }],
-      cpf_or_cnpj: '889.786.230-69',
+      cpf_or_cnpj: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',

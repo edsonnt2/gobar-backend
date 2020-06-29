@@ -28,7 +28,7 @@ describe('CreateUserServie', () => {
 
   it('should be able to create a new user', async () => {
     const data = await createUserService.execute({
-      full_name: 'Full Name Test',
+      name: 'Full Name Test',
       cell_phone: '12999999099',
       email: 'test@test.com',
       password: 'test-password',
@@ -42,7 +42,7 @@ describe('CreateUserServie', () => {
 
   it('should not be able to create a new account with email already registered', async () => {
     await createUserService.execute({
-      full_name: 'Full Name Test',
+      name: 'Full Name Test',
       cell_phone: '12999999999',
       email: 'test@test.com',
       password: 'test-password',
@@ -51,7 +51,7 @@ describe('CreateUserServie', () => {
 
     await expect(
       createUserService.execute({
-        full_name: 'Full Name Test Two',
+        name: 'Full Name Test Two',
         cell_phone: '55000000000',
         email: 'test@test.com',
         password: 'test-password',
@@ -62,7 +62,7 @@ describe('CreateUserServie', () => {
 
   it('should not be able to create a new account with cell_phone already registered', async () => {
     await createUserService.execute({
-      full_name: 'Full Name Test',
+      name: 'Full Name Test',
       cell_phone: '12999999999',
       email: 'test@test.com',
       password: 'test-password',
@@ -71,7 +71,7 @@ describe('CreateUserServie', () => {
 
     await expect(
       createUserService.execute({
-        full_name: 'Full Name Test Two',
+        name: 'Full Name Test Two',
         cell_phone: '12999999999',
         email: 'testwo@test.com',
         password: 'test-password',
@@ -84,7 +84,7 @@ describe('CreateUserServie', () => {
     const generateHash = jest.spyOn(fakeHashProvider, 'generateHash');
 
     await createUserService.execute({
-      full_name: 'Full Name Test',
+      name: 'Full Name Test',
       cell_phone: '(12) 99999-9999',
       email: 'test@test.com',
       password: 'test-password',
@@ -97,7 +97,7 @@ describe('CreateUserServie', () => {
   it('should not be able to create an account with birth date in format invalid.', async () => {
     await expect(
       createUserService.execute({
-        full_name: 'Full Name Test',
+        name: 'Full Name Test',
         cell_phone: '12999999999',
         email: 'test@test.com',
         password: 'test-password',
@@ -109,7 +109,7 @@ describe('CreateUserServie', () => {
   it('should not be able to create an account for under the age of 16.', async () => {
     await expect(
       createUserService.execute({
-        full_name: 'Full Name Test',
+        name: 'Full Name Test',
         cell_phone: '12999999999',
         email: 'test@test.com',
         password: 'test-password',

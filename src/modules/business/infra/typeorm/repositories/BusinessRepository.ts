@@ -86,6 +86,12 @@ class BusinessRepository implements IBUsinessRepository {
     return business;
   }
 
+  public async findByUserId(user_id: string): Promise<Business[]> {
+    const business = await this.ormRepository.find({ user_id });
+
+    return business;
+  }
+
   public async save(business: Business): Promise<void> {
     await this.ormRepository.save(business);
   }

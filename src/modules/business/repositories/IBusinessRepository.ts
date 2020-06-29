@@ -24,5 +24,6 @@ export default interface IBusinessRepository {
     where,
   }: IFindInBusinessDTO): Promise<Business | undefined>;
   findById(id: string): Promise<Business | undefined>;
+  findByUserId(user_id: string): Promise<Business[]>;
   save(business: Business): Promise<void>;
 }
