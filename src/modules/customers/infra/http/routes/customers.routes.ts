@@ -19,4 +19,10 @@ CustomersRoutes.post(
   customerControllers.create,
 );
 
+CustomersRoutes.get(
+  '/:id',
+  customersValidators.customersShow,
+  customerControllers.show,
+);
+
 export default CustomersRoutes;

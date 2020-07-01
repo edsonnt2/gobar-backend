@@ -12,7 +12,7 @@ let fakeCpfAndCnpjProvider: FakeCpfAndCnpjProvider;
 let createCustomerService: CreateCustomerService;
 let business: { id: string };
 
-describe('CreateCustomerServie', () => {
+describe('CreateCustomer', () => {
   beforeEach(async () => {
     fakeCustomerRepository = new FakeCustomerRepository();
     fakeBusinessRepository = new FakeBusinessRepository();

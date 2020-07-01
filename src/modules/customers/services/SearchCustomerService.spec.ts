@@ -7,7 +7,7 @@ let fakeBusinessRepository: FakeBusinessRepository;
 let fakeCustomerRepository: FakeCustomerRepository;
 let searchCustomerService: SearchCustomerService;
 
-describe('SearchCustomerBusiness', () => {
+describe('SearchCustomer', () => {
   beforeEach(() => {
     fakeCustomerRepository = new FakeCustomerRepository();
     fakeBusinessRepository = new FakeBusinessRepository();

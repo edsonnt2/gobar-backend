@@ -6,6 +6,11 @@ export default {
       search: Joi.string().required(),
     },
   }),
+  customersShow: celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().required(),
+    },
+  }),
   customersCreate: celebrate({
     [Segments.BODY]: {
       customer_id: Joi.string(),
