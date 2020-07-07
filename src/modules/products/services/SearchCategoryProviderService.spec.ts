@@ -7,7 +7,7 @@ let fakeCategoryProviderRepository: FakeCategoryProviderRepository;
 let fakeUserRepository: FakeUserRepository;
 let searchCategoryProviderService: SearchCategoryProviderService;
 
-describe('SearchCategory', () => {
+describe('SearchCategoryProduct', () => {
   beforeEach(() => {
     fakeCategoryProviderRepository = new FakeCategoryProviderRepository();
     fakeUserRepository = new FakeUserRepository();

@@ -7,10 +7,12 @@ import ProductsControllers from '../controllers/ProductsControllers';
 import ImageProductsControllers from '../controllers/ImageProductsControllers';
 import CategoryProductControllers from '../controllers/CategoryProductControllers';
 import CategoryProviderControllers from '../controllers/CategoryProviderControllers';
+import SearchProductsControllers from '../controllers/SearchProductsControllers';
 
 const ProductRouter = Router();
 const productsControllers = new ProductsControllers();
 const imageProductsControllers = new ImageProductsControllers();
+const searchProductsControllers = new SearchProductsControllers();
 const categoryProductControllers = new CategoryProductControllers();
 const categoryProviderControllers = new CategoryProviderControllers();
 
@@ -31,14 +33,26 @@ ProductRouter.patch(
 );
 
 ProductRouter.get(
+  '/search',
+  validatorsProduct.search,
+  searchProductsControllers.index,
+);
+
+ProductRouter.get(
+  '/find',
+  validatorsProduct.show,
+  searchProductsControllers.show,
+);
+
+ProductRouter.get(
   '/categories/search-product',
-  validatorsProduct.searchCategory,
+  validatorsProduct.search,
   categoryProductControllers.index,
 );
 
 ProductRouter.get(
   '/categories/search-provider',
-  validatorsProduct.searchCategory,
+  validatorsProduct.search,
   categoryProviderControllers.index,
 );
 

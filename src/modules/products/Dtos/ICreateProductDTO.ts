@@ -2,6 +2,7 @@ export default interface ICreateProductDTO {
   business_id: string;
   image?: string;
   description: string;
+  label_description: string;
   category: string;
   quantity: number;
   provider: string;

@@ -16,6 +16,9 @@ export default class Category {
   @Column()
   name: string;
 
+  @Column()
+  label_name: string;
+
   @OneToMany(
     () => BusinessCategory,
     businessCategory => businessCategory.category,

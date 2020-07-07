@@ -1,6 +1,7 @@
 import { getRepository, Repository } from 'typeorm';
 import ICreateUserDTO from '@modules/users/Dtos/ICreateUserDTO';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
+import removeAccents from '@shared/utils/removeAccents';
 import User from '../entities/User';
 
 class UserRepository implements IUserRepository {
@@ -20,6 +21,7 @@ class UserRepository implements IUserRepository {
   }: ICreateUserDTO): Promise<User> {
     const user = this.ormRepository.create({
       name,
+      label_name: removeAccents(name).toLowerCase().trim(),
       email,
       cell_phone,
       password,
@@ -35,7 +37,7 @@ class UserRepository implements IUserRepository {
   public async findByEmail(email: string): Promise<User | undefined> {
     const user = await this.ormRepository.findOne({
       where: {
-        email,
+        email: email.toLowerCase().trim(),
       },
     });
 

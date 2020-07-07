@@ -6,6 +6,8 @@ import CategoryRoutes from '@modules/categories/infra/http/routes/categories.rou
 import ProductRoutes from '@modules/products/infra/http/routes/products.routes';
 import IngressRouter from '@modules/ingress/infra/http/routes/ingress.routes';
 import CustomersRoutes from '@modules/customers/infra/http/routes/customers.routes';
+import CommandRouter from '@modules/commands/infra/http/routes/commands.routes';
+import CommandProductRouter from '@modules/commandsProducts/infra/http/routes/commandsProducts.routes';
 import ensureAuthenticated from '../middleware/ensureAuthenticated';
 
 const routes = Router();
@@ -17,5 +19,7 @@ routes.use('/business/categories', ensureAuthenticated, CategoryRoutes);
 routes.use('/products', ensureAuthenticated, ProductRoutes);
 routes.use('/ingress', ensureAuthenticated, IngressRouter);
 routes.use('/customers', ensureAuthenticated, CustomersRoutes);
+routes.use('/commands', ensureAuthenticated, CommandRouter);
+routes.use('/commands/products', ensureAuthenticated, CommandProductRouter);
 
 export default routes;

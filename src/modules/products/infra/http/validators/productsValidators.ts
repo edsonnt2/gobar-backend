@@ -19,9 +19,14 @@ export default {
       product_id: Joi.string().required(),
     },
   }),
-  searchCategory: celebrate({
+  search: celebrate({
     [Segments.QUERY]: {
       search: Joi.string().required(),
+    },
+  }),
+  show: celebrate({
+    [Segments.QUERY]: {
+      internal_code: Joi.string().required(),
     },
   }),
 };

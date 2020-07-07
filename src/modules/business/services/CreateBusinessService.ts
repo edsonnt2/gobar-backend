@@ -63,7 +63,7 @@ class CreateBusinessService {
     if (nameBusiness) throw new AppError('Business name already registered');
 
     const formattedCategory = categories.split(',').map(category => ({
-      name: category.toLowerCase().trim(),
+      name: category,
     }));
 
     if (formattedCategory.length > 4)

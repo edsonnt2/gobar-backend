@@ -16,6 +16,9 @@ export default class CategoryProvider {
   @Column()
   name: string;
 
+  @Column()
+  label_name: string;
+
   @OneToMany(() => Product, product => product.provider)
   product: Product;
 

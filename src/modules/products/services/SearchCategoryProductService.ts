@@ -10,7 +10,7 @@ interface IRequest {
 }
 
 @injectable()
-class CreateCategoryProductService {
+class SearchCategoryProductService {
   constructor(
     @inject('CategoryProductRepository')
     private CategoryProductRepository: ICategoryProductRepository,
@@ -35,4 +35,4 @@ class CreateCategoryProductService {
   }
 }
 
-export default CreateCategoryProductService;
+export default SearchCategoryProductService;

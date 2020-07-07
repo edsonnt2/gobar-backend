@@ -13,6 +13,7 @@ export default interface IIngressRepository {
     business_id: string,
   ): Promise<Ingress | undefined>;
   getAll(business_id: string): Promise<Ingress[]>;
+  ingressInBusiness(business_id: string): Promise<Ingress | undefined>;
   findById(id: string): Promise<Ingress | undefined>;
   deleteById(id: string, business_id: string): Promise<void>;
 }

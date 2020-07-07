@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import User from '@modules/users/infra/typeorm/entities/User';
 import { Expose } from 'class-transformer';
+import Command from '@modules/commands/infra/typeorm/entities/Command';
 import BusinessCustomer from './BusinessCustomer';
 
 @Entity('customers')
@@ -26,6 +27,9 @@ export default class Customer {
 
   @Column()
   name: string;
+
+  @Column()
+  label_name: string;
 
   @Column()
   cell_phone: number;
@@ -47,10 +51,12 @@ export default class Customer {
     businessCustomer => businessCustomer.customer,
     {
       cascade: ['insert'],
-      eager: true,
     },
   )
   business_customer: BusinessCustomer[];
+
+  @OneToMany(() => Command, command => command.customer)
+  command: Command[];
 
   @CreateDateColumn()
   created_at: Date;

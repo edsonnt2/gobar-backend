@@ -2,6 +2,7 @@ import { getRepository, Repository, Like } from 'typeorm';
 import Category from '@modules/categories/infra/typeorm/entities/Category';
 import ICreateCategoryDTO from '@modules/categories/Dtos/ICreateCategoryDTO';
 import ICategoryRepository from '@modules/categories/repositories/ICategoryRepository';
+import removeAccents from '@shared/utils/removeAccents';
 
 class FakeCategoryRepository implements ICategoryRepository {
   private ormRepository: Repository<Category>;
@@ -21,7 +22,7 @@ class FakeCategoryRepository implements ICategoryRepository {
   public async searchInCategory(search: string): Promise<Category[]> {
     const categories = await this.ormRepository.find({
       where: {
-        name: Like(`%${search.toLowerCase()}%`),
+        label_name: Like(`%${removeAccents(search).toLowerCase().trim()}%`),
       },
       take: 15,
     });

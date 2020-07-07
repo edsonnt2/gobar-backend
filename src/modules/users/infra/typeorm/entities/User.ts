@@ -21,6 +21,9 @@ export default class User {
   name: string;
 
   @Column()
+  label_name: string;
+
+  @Column()
   cell_phone: number;
 
   @Column()

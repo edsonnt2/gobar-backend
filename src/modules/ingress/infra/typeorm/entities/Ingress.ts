@@ -24,6 +24,9 @@ export default class Ingress {
   @Column()
   description: string;
 
+  @Column()
+  label_description: string;
+
   @Column('decimal', {
     precision: 10,
     scale: 2,

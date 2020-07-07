@@ -21,6 +21,7 @@ describe('UpdatedimageBusiness', () => {
     const product = await fakeProductRepository.create({
       business_id: 'business-id',
       description: 'Description Product',
+      label_description: 'description product',
       provider: 'Coca-cola',
       category: 'drinks',
       internal_code: '100',
@@ -52,6 +53,7 @@ describe('UpdatedimageBusiness', () => {
     const product = await fakeProductRepository.create({
       business_id: 'business-id',
       description: 'Description Product',
+      label_description: 'description product',
       provider: 'Coca-cola',
       category: 'drinks',
       internal_code: '100',
@@ -76,6 +78,7 @@ describe('UpdatedimageBusiness', () => {
       image: 'image.jpg',
       business_id: 'business-id',
       description: 'Description Product',
+      label_description: 'description product',
       provider: 'Coca-cola',
       category: 'drinks',
       internal_code: '100',

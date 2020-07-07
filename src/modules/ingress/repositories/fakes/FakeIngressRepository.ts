@@ -35,6 +35,16 @@ class FakeIngressRepository implements IIngressRepository {
     return getIngress;
   }
 
+  public async ingressInBusiness(
+    business_id: string,
+  ): Promise<Ingress | undefined> {
+    const command = this.ingress.find(
+      filIngress => filIngress.business_id === business_id,
+    );
+
+    return command;
+  }
+
   public async findById(id: string): Promise<Ingress | undefined> {
     const getIngress = this.ingress.find(findIngress => findIngress.id === id);
 

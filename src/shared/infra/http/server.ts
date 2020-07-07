@@ -6,15 +6,17 @@ import 'express-async-errors';
 import { errors } from 'celebrate';
 import AppError from '@shared/error/AppError';
 import uploadConfig from '@config/upload';
-import routes from './routes';
-
-import '../typeorm';
+import '@shared/infra/typeorm';
 import '@shared/container';
+
+import routes from './routes';
+import rateLimiter from './middleware/rateLimiter';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/file', express.static(uploadConfig.folderUpload));
+app.use(rateLimiter);
 app.use(routes);
 
 app.use(errors());

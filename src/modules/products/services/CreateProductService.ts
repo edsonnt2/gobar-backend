@@ -2,6 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/error/AppError';
 import IStorageProvider from '@shared/provider/StorageProvider/models/IStorageProvider';
 import IBusinessRepository from '@modules/business/repositories/IBusinessRepository';
+import removeAccents from '@shared/utils/removeAccents';
 import Product from '../infra/typeorm/entities/Product';
 import IProductRepository from '../repositories/IProductRepository';
 
@@ -59,8 +60,12 @@ class CreateProductService {
       throw new AppError('Description already registered');
     }
 
+    const formatted_internal_code = removeAccents(internal_code)
+      .toUpperCase()
+      .trim();
+
     const internalCodeProduct = await this.productRepository.findInProduct({
-      find: internal_code,
+      find: formatted_internal_code,
       where: 'internal_code',
       business_id,
     });
@@ -83,14 +88,17 @@ class CreateProductService {
 
     if (image) await this.storageProvider.saveFile(image);
 
+    const label_description = removeAccents(description).toLowerCase().trim();
+
     const product = await this.productRepository.create({
       business_id,
       image,
       description,
-      category: category.toLowerCase(),
+      label_description,
+      category,
       quantity,
-      provider: provider.toLowerCase(),
-      internal_code,
+      provider,
+      internal_code: formatted_internal_code,
       barcode,
       pushase_value,
       porcent,

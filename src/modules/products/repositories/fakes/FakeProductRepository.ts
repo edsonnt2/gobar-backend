@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import Product from '@modules/products/infra/typeorm/entities/Product';
 import ICreateProductDTO from '@modules/products/Dtos/ICreateProductDTO';
 import IFindInProductDTO from '@modules/products/Dtos/IFindInProductDTO';
@@ -8,8 +9,8 @@ class FakeProductRepository implements IProductRepository {
 
   public async create(data: ICreateProductDTO): Promise<Product> {
     const product = new Product();
-
-    Object.assign(product, { id: '274234498fsdf34548' }, data);
+    const id = crypto.randomBytes(6).toString('hex');
+    Object.assign(product, { id }, data);
 
     this.products.push(product);
 
@@ -35,10 +36,37 @@ class FakeProductRepository implements IProductRepository {
     return product;
   }
 
+  public async findByIds(ids: string[]): Promise<Product[]> {
+    const products = this.products.filter(
+      findProduct => ids.filter(id => id === findProduct.id).length > 0,
+    );
+
+    return products;
+  }
+
+  public async search(search: string, business_id: string): Promise<Product[]> {
+    const findProducts = this.products.filter(
+      getProduct =>
+        (getProduct.label_description.includes(search) ||
+          String(getProduct.sale_value).includes(search)) &&
+        getProduct.business_id === business_id,
+    );
+
+    return findProducts;
+  }
+
   public async save(product: Product): Promise<void> {
     const findIndex = this.products.findIndex(({ id }) => id === product.id);
 
     this.products[findIndex] = product;
+  }
+
+  public async saveArray(products: Product[]): Promise<void> {
+    products.forEach(product => {
+      const findIndex = this.products.findIndex(({ id }) => id === product.id);
+
+      this.products[findIndex] = product;
+    });
   }
 }
 

@@ -8,8 +8,10 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import Business from '@modules/business/infra/typeorm/entities/Business';
+import CommandProduct from '@modules/commandsProducts/infra/typeorm/entities/CommandProduct';
 import CategoryProduct from './CategoryProduct';
 import CategoryProvider from './CategoryProvider';
 
@@ -30,6 +32,9 @@ export default class Product {
 
   @Column()
   description: string;
+
+  @Column()
+  label_description: string;
 
   @Column('uuid')
   category_id: string;
@@ -61,6 +66,9 @@ export default class Product {
   )
   @JoinColumn({ name: 'provider_id' })
   provider: CategoryProvider;
+
+  @OneToMany(() => CommandProduct, commandProduct => commandProduct.product)
+  command_product: CommandProduct[];
 
   @Column()
   internal_code: string;

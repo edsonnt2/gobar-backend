@@ -7,6 +7,7 @@ export default interface IProductRepository {
     business_id,
     image,
     description,
+    label_description,
     category,
     quantity,
     provider,
@@ -22,5 +23,8 @@ export default interface IProductRepository {
     business_id,
   }: IFindInProductDTO): Promise<Product | undefined>;
   findById(id: string): Promise<Product | undefined>;
+  findByIds(ids: string[]): Promise<Product[]>;
+  search(search: string, business_id: string): Promise<Product[]>;
   save(product: Product): Promise<void>;
+  saveArray(products: Product[]): Promise<void>;
 }

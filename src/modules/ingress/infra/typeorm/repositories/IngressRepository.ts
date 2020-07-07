@@ -2,6 +2,7 @@ import Ingress from '@modules/ingress/infra/typeorm/entities/Ingress';
 import ICreateIngressDTO from '@modules/ingress/Dtos/ICreateIngressDTO';
 import IIngressRepository from '@modules/ingress/repositories/IIngressRepository';
 import { Repository, getRepository } from 'typeorm';
+import removeAccents from '@shared/utils/removeAccents';
 
 class IngressRepository implements IIngressRepository {
   private ormReposity: Repository<Ingress>;
@@ -19,6 +20,7 @@ class IngressRepository implements IIngressRepository {
     const ingress = this.ormReposity.create({
       business_id,
       description,
+      label_description: removeAccents(description).toLowerCase().trim(),
       consume,
       value,
     });
@@ -33,7 +35,7 @@ class IngressRepository implements IIngressRepository {
     business_id: string,
   ): Promise<Ingress | undefined> {
     const ingress = await this.ormReposity.findOne({
-      description,
+      label_description: removeAccents(description).toLowerCase().trim(),
       business_id,
     });
 
@@ -42,6 +44,14 @@ class IngressRepository implements IIngressRepository {
 
   public async getAll(business_id: string): Promise<Ingress[]> {
     const ingress = await this.ormReposity.find({ business_id });
+
+    return ingress;
+  }
+
+  public async ingressInBusiness(
+    business_id: string,
+  ): Promise<Ingress | undefined> {
+    const ingress = await this.ormReposity.findOne({ business_id });
 
     return ingress;
   }

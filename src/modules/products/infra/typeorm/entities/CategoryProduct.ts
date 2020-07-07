@@ -16,6 +16,9 @@ export default class CategoryProduct {
   @Column()
   name: string;
 
+  @Column()
+  label_name: string;
+
   @OneToMany(() => Product, product => product.category)
   product: Product;
 

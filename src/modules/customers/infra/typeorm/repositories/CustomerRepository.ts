@@ -11,6 +11,7 @@ import ICustomerRepository from '@modules/customers/repositories/ICustomerReposi
 import IFindInCustomerDTO from '@modules/customers/Dtos/IFindInCustomerDTO';
 import { IReturnSearchCustomerDTO } from '@modules/customers/Dtos/IReturnSearchCustomerDTO';
 import User from '@modules/users/infra/typeorm/entities/User';
+import removeAccents from '@shared/utils/removeAccents';
 import Customer from '../entities/Customer';
 
 class CustomerRepository implements ICustomerRepository {
@@ -34,7 +35,8 @@ class CustomerRepository implements ICustomerRepository {
   }: ICreateCustomerDTO): Promise<Customer> {
     const customer = this.ormRepository.create({
       name,
-      email,
+      label_name: removeAccents(name).toLowerCase().trim(),
+      email: email?.toLowerCase(),
       cell_phone,
       birthDate,
       gender,
@@ -51,9 +53,17 @@ class CustomerRepository implements ICustomerRepository {
     find,
     where,
   }: IFindInCustomerDTO): Promise<Customer | undefined> {
+    let newWhere: string = where;
+    let newFind = find;
+    if (where === 'name') {
+      newWhere = 'label_name';
+      const findString = find as string;
+      newFind = removeAccents(findString).toLowerCase().trim();
+    }
+
     const customer = await this.ormRepository.findOne({
       where: {
-        [where]: find,
+        [newWhere]: newFind,
       },
     });
 
@@ -61,19 +71,26 @@ class CustomerRepository implements ICustomerRepository {
   }
 
   public async findById(id: string): Promise<Customer | undefined> {
-    const customer = await this.ormRepository.findOne({ id });
+    const customer = await this.ormRepository.findOne(
+      { id },
+      {
+        relations: ['business_customer'],
+      },
+    );
 
     return customer;
   }
 
   public async search(
     business_id: string,
-    search: string,
+    findSearch: string,
   ): Promise<IReturnSearchCustomerDTO> {
-    const isNumber = search
+    const isNumber = findSearch
       .split('')
-      .filter(char => Number(char) || '0')
+      .filter(char => Number(char) || char === '0')
       .join('');
+
+    const search = removeAccents(findSearch).toLowerCase().trim();
 
     const whereUser: {
       [key: string]: FindOperator<string>;
@@ -81,12 +98,13 @@ class CustomerRepository implements ICustomerRepository {
     }[] = [];
 
     const customersOne = await this.ormRepository.find({
+      relations: ['business_customer', 'command'],
       where: [
         {
-          name: Like(`%${search.trim()}%`),
+          label_name: Like(`%${search}%`),
         },
         {
-          email: Like(`%${search.trim()}%`),
+          email: Like(`%${findSearch.toLowerCase().trim()}%`),
         },
         {
           cell_phone: Like(`%${isNumber}%`),
@@ -100,11 +118,11 @@ class CustomerRepository implements ICustomerRepository {
     const usersOne = await this.userRepository.find({
       where: [
         {
-          name: Like(`%${search}%`),
+          label_name: Like(`%${search}%`),
           customer_id: IsNull(),
         },
         {
-          email: Like(`%${search}%`),
+          email: Like(`%${findSearch.toLowerCase().trim()}%`),
           customer_id: IsNull(),
         },
         {
@@ -124,12 +142,12 @@ class CustomerRepository implements ICustomerRepository {
       .forEach(searchSeparator => {
         const isNumberSeparator = searchSeparator
           .split('')
-          .filter(char => Number(char) || '0')
+          .filter(char => Number(char) || char === '0')
           .join('');
 
         whereCustomer.push(
           {
-            name: Like(`%${searchSeparator}%`),
+            label_name: Like(`%${searchSeparator}%`),
             id: Raw(alias =>
               notIdCustomers
                 .map((id, index) => {
@@ -164,7 +182,7 @@ class CustomerRepository implements ICustomerRepository {
         );
         whereUser.push(
           {
-            name: Like(`%${searchSeparator}%`),
+            label_name: Like(`%${searchSeparator}%`),
             customer_id: IsNull(),
             id: Raw(alias =>
               notIdUsers
@@ -205,6 +223,7 @@ class CustomerRepository implements ICustomerRepository {
     const customersTwo =
       customersOne.length < 20
         ? await this.ormRepository.find({
+            relations: ['business_customer', 'command'],
             where: whereCustomer,
             take: 20 - customersOne.length,
           })

@@ -5,3 +5,5 @@ import '@modules/categories';
 import '@modules/products';
 import '@modules/ingress';
 import '@modules/customers';
+import '@modules/commands';
+import '@modules/commandsProducts';
