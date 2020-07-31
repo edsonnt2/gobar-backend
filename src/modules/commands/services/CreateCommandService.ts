@@ -7,6 +7,7 @@ import ICommandRepository from '../repositories/ICommandRepository';
 import Command from '../infra/typeorm/entities/Command';
 
 interface IRequest {
+  user_id: string;
   business_id: string;
   customer_id: string;
   ingress_id?: string;
@@ -32,6 +33,7 @@ class CreateCommandService {
   ) {}
 
   public async execute({
+    user_id,
     business_id,
     customer_id,
     number,
@@ -92,6 +94,7 @@ class CreateCommandService {
 
     const command = await this.commandRepository.create({
       business_id,
+      operator_id: user_id,
       customer_id,
       number,
       value_ingress,

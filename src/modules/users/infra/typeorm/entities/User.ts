@@ -11,6 +11,11 @@ import {
 } from 'typeorm';
 import Business from '@modules/business/infra/typeorm/entities/Business';
 import Customer from '@modules/customers/infra/typeorm/entities/Customer';
+import ItemForSale from '@modules/itemsForSale/infra/typeorm/entities/ItemForSale';
+import Command from '@modules/commands/infra/typeorm/entities/Command';
+import CommandClosure from '@modules/commands/infra/typeorm/entities/CommandClosure';
+import Table from '@modules/tables/infra/typeorm/entities/Table';
+import TableClosure from '@modules/tables/infra/typeorm/entities/TableClosure';
 
 @Entity('users')
 export default class User {
@@ -54,6 +59,21 @@ export default class User {
   @OneToOne(() => Customer, customer => customer.user)
   @JoinColumn({ name: 'customer_id' })
   customer: Customer;
+
+  @OneToMany(() => ItemForSale, itemForSale => itemForSale.operator)
+  item_for_sale: ItemForSale[];
+
+  @OneToMany(() => Command, command => command.operator)
+  command: Command[];
+
+  @OneToMany(() => CommandClosure, commandClosure => commandClosure.operator)
+  command_closure: CommandClosure[];
+
+  @OneToMany(() => Table, table => table.operator)
+  table: Table[];
+
+  @OneToMany(() => TableClosure, tableClosure => tableClosure.operator)
+  table_closure: TableClosure[];
 
   @CreateDateColumn()
   created_at: Date;

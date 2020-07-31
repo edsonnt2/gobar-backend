@@ -98,7 +98,7 @@ class CustomerRepository implements ICustomerRepository {
     }[] = [];
 
     const customersOne = await this.ormRepository.find({
-      relations: ['business_customer', 'command'],
+      relations: ['business_customer', 'command', 'table_customer'],
       where: [
         {
           label_name: Like(`%${search}%`),

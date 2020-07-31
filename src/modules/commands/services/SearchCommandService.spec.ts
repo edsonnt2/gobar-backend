@@ -34,12 +34,14 @@ describe('SearchCommand', () => {
   it('should be able to search a command', async () => {
     const commandOne = await fakeCommandRepository.create({
       business_id: business.id,
+      operator_id: 'operator-id',
       customer_id: 'customer-id-one',
       number: 100,
     });
 
     const commandTwo = await fakeCommandRepository.create({
       business_id: business.id,
+      operator_id: 'operator-id',
       customer_id: 'customer-id-two',
       number: 110,
     });

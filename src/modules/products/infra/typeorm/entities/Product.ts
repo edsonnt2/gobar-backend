@@ -11,7 +11,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import Business from '@modules/business/infra/typeorm/entities/Business';
-import CommandProduct from '@modules/commandsProducts/infra/typeorm/entities/CommandProduct';
+import ItemForSale from '@modules/itemsForSale/infra/typeorm/entities/ItemForSale';
 import CategoryProduct from './CategoryProduct';
 import CategoryProvider from './CategoryProvider';
 
@@ -67,8 +67,8 @@ export default class Product {
   @JoinColumn({ name: 'provider_id' })
   provider: CategoryProvider;
 
-  @OneToMany(() => CommandProduct, commandProduct => commandProduct.product)
-  command_product: CommandProduct[];
+  @OneToMany(() => ItemForSale, itemForSale => itemForSale.product)
+  item_for_sale: ItemForSale[];
 
   @Column()
   internal_code: string;

@@ -18,6 +18,7 @@ export default class CommandControllers {
 
     const command = await createCommandService.execute({
       business_id: req.business.id,
+      user_id: req.user.id,
       customer_id,
       number,
       ingress_id,
@@ -29,10 +30,13 @@ export default class CommandControllers {
   }
 
   public async index(req: Request, res: Response): Promise<Response> {
+    const { closed } = req.query;
+
     const allCommandService = container.resolve(AllCommandService);
 
     const commands = await allCommandService.execute({
       business_id: req.business.id,
+      closed: closed as boolean | undefined,
     });
 
     return res.json(classToClass(commands));

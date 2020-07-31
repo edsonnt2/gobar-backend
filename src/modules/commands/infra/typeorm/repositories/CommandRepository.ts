@@ -1,4 +1,4 @@
-import { Repository, getRepository } from 'typeorm';
+import { Repository, getRepository, IsNull, Not, ObjectLiteral } from 'typeorm';
 import Command from '@modules/commands/infra/typeorm/entities/Command';
 import ICreateCommandDTO from '@modules/commands/Dtos/ICreateCommandDTO';
 import ICommandRepository from '@modules/commands/repositories/ICommandRepository';
@@ -7,6 +7,9 @@ import IFindByCustomerCommandDTO from '@modules/commands/Dtos/IFIndByCustomerCom
 import IDeleteByIdCommandDTO from '@modules/commands/Dtos/IDeleteByIdCommandDTO';
 import ISearchCommandDTO from '@modules/commands/Dtos/ISearchCommandDTO';
 import removeAccents from '@shared/utils/removeAccents';
+import IFindByIdsCommandDTO from '@modules/commands/Dtos/IFindByIdsCommandDTO';
+import IAllCommandDTO from '@modules/commands/Dtos/IAllCommandDTO';
+import IFindByIdCommandDTO from '@modules/commands/Dtos/IFindByIdCommandDTO';
 
 class CommandRepository implements ICommandRepository {
   private ormRepository: Repository<Command>;
@@ -16,6 +19,7 @@ class CommandRepository implements ICommandRepository {
   }
 
   public async create({
+    operator_id,
     business_id,
     customer_id,
     number,
@@ -25,6 +29,7 @@ class CommandRepository implements ICommandRepository {
     value_consume,
   }: ICreateCommandDTO): Promise<Command> {
     const command = this.ormRepository.create({
+      operator_id,
       business_id,
       customer_id,
       number,
@@ -42,37 +47,105 @@ class CommandRepository implements ICommandRepository {
   public async findByNumber({
     number,
     business_id,
+    closed,
   }: IFindByNumberCommandDTO): Promise<Command | undefined> {
-    const command = await this.ormRepository.findOne({
-      number,
-      business_id,
-    });
+    const hasClosed = closed
+      ? 'AND command.command_closure_id IS NOT NULL'
+      : 'AND command.command_closure_id IS NULL';
+
+    const command = await this.ormRepository
+      .createQueryBuilder('command')
+      .leftJoinAndSelect('command.command_product', 'command_product')
+      .leftJoinAndSelect('command_product.operator', 'operator')
+      .leftJoinAndSelect('command_product.product', 'product')
+      .leftJoinAndSelect('command.customer', 'customer')
+      .leftJoinAndSelect('customer.user', 'user')
+      .select([
+        'command',
+        'command_product',
+        'product.image',
+        'operator.name',
+        'operator.avatar',
+        'customer.name',
+        'user.avatar',
+      ])
+      .where(
+        `command.number=:number AND command.business_id=:business_id ${hasClosed}`,
+        {
+          number,
+          business_id,
+        },
+      )
+      .orderBy({
+        'command_product.id': 'DESC',
+      })
+      .getOne();
 
     return command;
   }
 
-  public async getAll(business_id: string): Promise<Command[]> {
+  public async getAll({
+    business_id,
+    closed,
+  }: IAllCommandDTO): Promise<Command[]> {
+    const hasClosed = closed ? Not(IsNull()) : IsNull();
+
     const command = await this.ormRepository.find({
       relations: ['customer'],
       where: {
         business_id,
+        command_closure_id: hasClosed,
       },
     });
 
     return command;
   }
 
-  public async findById(id: string): Promise<Command | undefined> {
-    const command = this.ormRepository.findOne({ id });
+  public async findById({
+    id,
+    closed,
+  }: IFindByIdCommandDTO): Promise<Command | undefined> {
+    const hasClosed = closed ? Not(IsNull()) : IsNull();
+
+    const command = await this.ormRepository.findOne({
+      where: {
+        id,
+        command_closure_id: hasClosed,
+      },
+    });
 
     return command;
+  }
+
+  public async findByIds({
+    ids,
+    business_id,
+    closed,
+  }: IFindByIdsCommandDTO): Promise<Command[]> {
+    const hasClosed = closed ? Not(IsNull()) : IsNull();
+
+    const commands = await this.ormRepository.findByIds(ids, {
+      where: {
+        business_id,
+        command_closure_id: hasClosed,
+      },
+    });
+
+    return commands;
   }
 
   public async findByCustomer({
     customer_id,
     business_id,
+    closed,
   }: IFindByCustomerCommandDTO): Promise<Command | undefined> {
-    const command = this.ormRepository.findOne({ customer_id, business_id });
+    const hasClosed = closed ? Not(IsNull()) : IsNull();
+
+    const command = await this.ormRepository.findOne({
+      customer_id,
+      business_id,
+      command_closure_id: hasClosed,
+    });
 
     return command;
   }
@@ -80,6 +153,7 @@ class CommandRepository implements ICommandRepository {
   public async search({
     search,
     business_id,
+    closed,
   }: ISearchCommandDTO): Promise<Command[]> {
     const isNumber = search
       .split('')
@@ -87,24 +161,10 @@ class CommandRepository implements ICommandRepository {
       .join('');
     const newSearch = removeAccents(search).toLowerCase().trim();
 
-    const queryNumber =
-      isNumber !== ''
-        ? `c.number LIKE '%${isNumber}%' OR cu.cell_phone LIKE '%${isNumber}%' OR cu.cpf_or_cnpj LIKE '%${isNumber}%' OR `
-        : '';
-
-    const commandOne = await this.ormRepository.query(
-      `SELECT c.id FROM commands AS c INNER JOIN customers AS cu ON c.customer_id = cu.id
-      WHERE (${queryNumber}cu.label_name LIKE '%${newSearch}%' OR cu.email LIKE '%${newSearch}%')
-      AND c.business_id = $1 LIMIT 20`,
-      [business_id],
-    );
-
-    const notIdCommand: string[] = commandOne.map(
-      ({ id }: { id: string }) => ` AND c.id != '${id}'`,
-    );
-
     const searchSql: string[] = [];
-    newSearch.split(' ').forEach(searchSeparator => {
+    let parameters: ObjectLiteral = {};
+
+    newSearch.split(' ').forEach((searchSeparator, index) => {
       const isNumberSeparator = searchSeparator
         .split('')
         .filter(char => Number(char) || char === '0')
@@ -112,37 +172,58 @@ class CommandRepository implements ICommandRepository {
 
       const queryNumberSeparator =
         isNumber !== ''
-          ? `c.number LIKE '%${isNumberSeparator}%' OR cu.cell_phone LIKE '%${isNumberSeparator}%' OR
-          cu.cpf_or_cnpj LIKE '%${isNumberSeparator}%' OR `
+          ? `command.number LIKE :number${String(
+              index,
+            )} OR customer.cell_phone LIKE :number${String(index)} OR
+          customer.cpf_or_cnpj LIKE :number${String(index)} OR `
           : '';
 
+      if (isNumber !== '') {
+        parameters = {
+          ...parameters,
+          [`number${String(index)}`]: `%${isNumberSeparator}%`,
+        };
+      }
+
       searchSql.push(
-        `(${queryNumberSeparator}cu.label_name LIKE '%${searchSeparator}%' OR cu.email LIKE '%${searchSeparator}%')`,
+        `(${queryNumberSeparator}customer.label_name LIKE :search${String(
+          index,
+        )} OR customer.email LIKE :search${String(index)})`,
       );
+
+      parameters = {
+        ...parameters,
+        [`search${String(index)}`]: `%${searchSeparator}%`,
+      };
     });
 
-    const commandTwo =
-      commandOne.length < 20
-        ? await this.ormRepository.query(
-            `SELECT c.id FROM commands AS c INNER JOIN customers AS cu ON c.customer_id = cu.id
-            WHERE ${searchSql.join(
-              ' AND ',
-            )} AND c.business_id = $1${notIdCommand.join('')} LIMIT ${
-              20 - commandOne.length
-            }`,
-            [business_id],
-          )
-        : [];
+    const hasClosed = closed
+      ? 'AND command.command_closure_id IS NOT NULL'
+      : 'AND command.command_closure_id IS NULL';
 
-    const commandIds = commandOne.concat(commandTwo);
+    parameters = {
+      ...parameters,
+      bid: business_id,
+    };
 
-    const commands =
-      commandIds.length > 0
-        ? await this.ormRepository.find({
-            relations: ['customer'],
-            where: commandIds,
-          })
-        : [];
+    const commands = await this.ormRepository
+      .createQueryBuilder('command')
+      .innerJoinAndSelect('command.customer', 'customer')
+      .leftJoinAndSelect('customer.user', 'user')
+      .select([
+        'command.id',
+        'command.number',
+        'command.command_closure_id',
+        'customer.id',
+        'customer.name',
+        'user.avatar',
+      ])
+      .where(
+        `${searchSql.join(' AND ')} AND command.business_id=:bid ${hasClosed}`,
+        parameters,
+      )
+      .limit(20)
+      .getMany();
 
     return commands;
   }

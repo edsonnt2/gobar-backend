@@ -34,6 +34,7 @@ describe('FindCommand', () => {
   it('should be able to find a command', async () => {
     const newCommand = await fakeCommandRepository.create({
       business_id: business.id,
+      operator_id: 'operator-id',
       customer_id: 'customer-id',
       number: 100,
     });

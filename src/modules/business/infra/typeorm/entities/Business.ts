@@ -14,6 +14,9 @@ import User from '@modules/users/infra/typeorm/entities/User';
 import Product from '@modules/products/infra/typeorm/entities/Product';
 import Ingress from '@modules/ingress/infra/typeorm/entities/Ingress';
 import Command from '@modules/commands/infra/typeorm/entities/Command';
+import CommandClosure from '@modules/commands/infra/typeorm/entities/CommandClosure';
+import Table from '@modules/tables/infra/typeorm/entities/Table';
+import TableClosure from '@modules/tables/infra/typeorm/entities/TableClosure';
 import BusinessCategory from './BusinessCategory';
 
 @Entity('business')
@@ -52,6 +55,15 @@ export default class Business {
 
   @OneToMany(() => Command, command => command.business)
   command: Command[];
+
+  @OneToMany(() => CommandClosure, commandClosure => commandClosure.business)
+  command_closure: CommandClosure[];
+
+  @OneToMany(() => Table, tableIntitie => tableIntitie.business)
+  table_entitie: Table[];
+
+  @OneToMany(() => TableClosure, tableClosure => tableClosure.business)
+  table_closure: CommandClosure[];
 
   @Column()
   avatar: string;

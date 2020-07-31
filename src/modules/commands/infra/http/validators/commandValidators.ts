@@ -10,9 +10,21 @@ export default {
       value_consume: Joi.number(),
     },
   }),
+  index: celebrate({
+    [Segments.QUERY]: {
+      closed: Joi.boolean(),
+    },
+  }),
   search: celebrate({
     [Segments.QUERY]: {
       search: Joi.string().required(),
+      closed: Joi.boolean(),
+    },
+  }),
+  find: celebrate({
+    [Segments.QUERY]: {
+      number: Joi.number().required(),
+      closed: Joi.boolean(),
     },
   }),
 };

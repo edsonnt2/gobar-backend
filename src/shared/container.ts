@@ -6,4 +6,6 @@ import '@modules/products';
 import '@modules/ingress';
 import '@modules/customers';
 import '@modules/commands';
-import '@modules/commandsProducts';
+import '@modules/tables';
+import '@modules/itemsForSale';
+import '@modules/anyDiscounts';

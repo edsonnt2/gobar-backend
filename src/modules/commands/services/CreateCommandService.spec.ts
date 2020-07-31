@@ -62,6 +62,7 @@ describe('CreateCommand', () => {
     const command = await createCommandService.execute({
       business_id: business.id,
       customer_id: customer.id,
+      user_id: 'operator-id',
       number: 100,
       ingress_id: ingress.id,
       prepaid_ingress: false,
@@ -74,6 +75,7 @@ describe('CreateCommand', () => {
     await expect(
       createCommandService.execute({
         business_id: 'business-no-exists',
+        user_id: 'operator-id',
         customer_id: customer.id,
         number: 100,
       }),
@@ -84,6 +86,7 @@ describe('CreateCommand', () => {
     await expect(
       createCommandService.execute({
         business_id: business.id,
+        user_id: 'operator-id',
         customer_id: 'customer-no-exists',
         number: 100,
       }),
@@ -108,6 +111,7 @@ describe('CreateCommand', () => {
       createCommandService.execute({
         business_id: businessTwo.id,
         customer_id: customer.id,
+        user_id: 'operator-id',
         number: 100,
       }),
     ).rejects.toBeInstanceOf(AppError);
@@ -117,6 +121,7 @@ describe('CreateCommand', () => {
     await createCommandService.execute({
       business_id: business.id,
       customer_id: customer.id,
+      user_id: 'operator-id',
       number: 100,
     });
 
@@ -124,6 +129,7 @@ describe('CreateCommand', () => {
       createCommandService.execute({
         business_id: business.id,
         customer_id: customer.id,
+        user_id: 'operator-id',
         number: 101,
       }),
     ).rejects.toBeInstanceOf(AppError);
@@ -133,6 +139,7 @@ describe('CreateCommand', () => {
     const command = await createCommandService.execute({
       business_id: business.id,
       customer_id: customer.id,
+      user_id: 'operator-id',
       number: 100,
     });
 
@@ -146,6 +153,7 @@ describe('CreateCommand', () => {
     await expect(
       createCommandService.execute({
         business_id: business.id,
+        user_id: 'operator-id',
         customer_id: customerTwo.id,
         number: command.number,
       }),
@@ -164,6 +172,7 @@ describe('CreateCommand', () => {
       createCommandService.execute({
         business_id: business.id,
         customer_id: customer.id,
+        user_id: 'operator-id',
         ingress_id: 'ingress-non-exists',
         number: 100,
       }),
@@ -195,6 +204,7 @@ describe('CreateCommand', () => {
       createCommandService.execute({
         business_id: business.id,
         customer_id: customer.id,
+        user_id: 'operator-id',
         ingress_id: ingress.id,
         number: 100,
       }),
@@ -213,6 +223,7 @@ describe('CreateCommand', () => {
       createCommandService.execute({
         business_id: business.id,
         customer_id: customer.id,
+        user_id: 'operator-id',
         number: 100,
       }),
     ).rejects.toBeInstanceOf(AppError);

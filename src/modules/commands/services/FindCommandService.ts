@@ -7,6 +7,7 @@ import Command from '../infra/typeorm/entities/Command';
 interface IRequest {
   business_id: string;
   number: number;
+  closed?: boolean;
 }
 
 @injectable()
@@ -19,7 +20,11 @@ class ListCommandService {
     private businessRepository: IBusinessRepository,
   ) {}
 
-  public async execute({ business_id, number }: IRequest): Promise<Command> {
+  public async execute({
+    business_id,
+    number,
+    closed,
+  }: IRequest): Promise<Command> {
     const business = await this.businessRepository.findById(business_id);
 
     if (!business) throw new AppError('Business not found');
@@ -27,6 +32,7 @@ class ListCommandService {
     const command = await this.commandRepository.findByNumber({
       number,
       business_id,
+      closed,
     });
 
     if (!command) throw new AppError('Command not found at the Business');

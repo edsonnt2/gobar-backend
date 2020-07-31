@@ -1,18 +1,24 @@
+import crypto from 'crypto';
 import Command from '@modules/commands/infra/typeorm/entities/Command';
-import ICreateIngressDTO from '@modules/commands/Dtos/ICreateCommandDTO';
+import ICreateCommandDTO from '@modules/commands/Dtos/ICreateCommandDTO';
 import IFindByNumberCommandDTO from '@modules/commands/Dtos/IFIndByNumberCommandDTO';
 import IFindByCustomerCommandDTO from '@modules/commands/Dtos/IFIndByCustomerCommandDTO';
 import IDeleteByIdCommandDTO from '@modules/commands/Dtos/IDeleteByIdCommandDTO';
 import ISearchCommandDTO from '@modules/commands/Dtos/ISearchCommandDTO';
+import IFindByIdsCommandDTO from '@modules/commands/Dtos/IFindByIdsCommandDTO';
+import IAllCommandDTO from '@modules/commands/Dtos/IAllCommandDTO';
+import IFindByIdCommandDTO from '@modules/commands/Dtos/IFindByIdCommandDTO';
 import ICommandRepository from '../ICommandRepository';
 
 class FakeCommandRepository implements ICommandRepository {
   private commands: Command[] = [];
 
-  public async create(data: ICreateIngressDTO): Promise<Command> {
+  public async create(data: ICreateCommandDTO): Promise<Command> {
     const command = new Command();
 
-    Object.assign(command, { id: '274234498fsdf34548' }, data);
+    const idCommand = crypto.randomBytes(6).toString('hex');
+
+    Object.assign(command, { id: idCommand }, data);
 
     this.commands.push(command);
 
@@ -22,26 +28,65 @@ class FakeCommandRepository implements ICommandRepository {
   public async findByNumber({
     number,
     business_id,
+    closed,
   }: IFindByNumberCommandDTO): Promise<Command | undefined> {
-    const command = this.commands.find(
-      findCommand =>
+    const command = this.commands.find(findCommand => {
+      const openOrClose = closed
+        ? !!findCommand.command_closure_id
+        : !findCommand.command_closure_id;
+      return (
         findCommand.number === number &&
-        findCommand.business_id === business_id,
-    );
+        findCommand.business_id === business_id &&
+        openOrClose
+      );
+    });
 
     return command;
   }
 
-  public async getAll(business_id: string): Promise<Command[]> {
-    const command = this.commands.filter(
-      filCommand => filCommand.business_id === business_id,
-    );
+  public async getAll({
+    business_id,
+    closed,
+  }: IAllCommandDTO): Promise<Command[]> {
+    const command = this.commands.filter(filCommand => {
+      const openOrClose = closed
+        ? !!filCommand.command_closure_id
+        : !filCommand.command_closure_id;
+      return filCommand.business_id === business_id && openOrClose;
+    });
 
     return command;
   }
 
-  public async findById(id: string): Promise<Command | undefined> {
-    const command = this.commands.find(findCommand => findCommand.id === id);
+  public async findById({
+    id,
+    closed,
+  }: IFindByIdCommandDTO): Promise<Command | undefined> {
+    const command = this.commands.find(findCommand => {
+      const openOrClose = closed
+        ? !!findCommand.command_closure_id
+        : !findCommand.command_closure_id;
+      return findCommand.id === id && openOrClose;
+    });
+
+    return command;
+  }
+
+  public async findByIds({
+    ids,
+    business_id,
+    closed,
+  }: IFindByIdsCommandDTO): Promise<Command[]> {
+    const command = this.commands.filter(filterCommand => {
+      const openOrClose = closed
+        ? !!filterCommand.command_closure_id
+        : !filterCommand.command_closure_id;
+      return (
+        ids.some(id => id === filterCommand.id) &&
+        filterCommand.business_id === business_id &&
+        openOrClose
+      );
+    });
 
     return command;
   }
@@ -49,12 +94,18 @@ class FakeCommandRepository implements ICommandRepository {
   public async findByCustomer({
     customer_id,
     business_id,
+    closed,
   }: IFindByCustomerCommandDTO): Promise<Command | undefined> {
-    const command = this.commands.find(
-      findCommand =>
+    const command = this.commands.find(findCommand => {
+      const openOrClose = closed
+        ? !!findCommand.command_closure_id
+        : !findCommand.command_closure_id;
+      return (
         findCommand.customer_id === customer_id &&
-        findCommand.business_id === business_id,
-    );
+        findCommand.business_id === business_id &&
+        openOrClose
+      );
+    });
 
     return command;
   }
@@ -62,24 +113,23 @@ class FakeCommandRepository implements ICommandRepository {
   public async search({
     search,
     business_id,
+    closed,
   }: ISearchCommandDTO): Promise<Command[]> {
     const isNumber = search
       .split('')
       .filter(char => Number(char) || char === '0')
       .join('');
 
-    // const newSearch = removeAccents(search).toLowerCase().trim();
-
-    const findCommands = this.commands.filter(
-      command =>
-        // (
+    const findCommands = this.commands.filter(command => {
+      const openOrClose = closed
+        ? !!command.command_closure_id
+        : !command.command_closure_id;
+      return (
         String(command.number).includes(isNumber) &&
-        // command.customer.label_name.includes(newSearch) ||
-        // String(command.customer.cell_phone).includes(isNumber) ||
-        // command.customer.email.includes(newSearch) ||
-        // String(command.customer.cpf_or_cnpj).includes(isNumber)) &&
-        command.business_id === business_id,
-    );
+        command.business_id === business_id &&
+        openOrClose
+      );
+    });
 
     return findCommands;
   }

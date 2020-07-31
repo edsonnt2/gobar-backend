@@ -9,8 +9,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 import User from '@modules/users/infra/typeorm/entities/User';
-import { Expose } from 'class-transformer';
 import Command from '@modules/commands/infra/typeorm/entities/Command';
+import TableCustomer from '@modules/tables/infra/typeorm/entities/TableCustomer';
 import BusinessCustomer from './BusinessCustomer';
 
 @Entity('customers')
@@ -58,16 +58,12 @@ export default class Customer {
   @OneToMany(() => Command, command => command.customer)
   command: Command[];
 
+  @OneToMany(() => TableCustomer, tableCustomer => tableCustomer.customer)
+  table_customer: TableCustomer[];
+
   @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
-
-  @Expose({ name: 'avatar_url' })
-  getAvatarUrl(): string | null {
-    return this.user && this.user.avatar
-      ? `${process.env.URL_HOST}/file/${this.user.avatar}`
-      : null;
-  }
 }
