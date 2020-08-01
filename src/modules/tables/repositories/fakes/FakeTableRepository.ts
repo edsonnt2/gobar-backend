@@ -9,6 +9,7 @@ import IFindByIdsTableDTO from '@modules/tables/Dtos/IFindByIdsTableDTO';
 import IFindByCustomerTableDTO from '@modules/tables/Dtos/IFindByCustomerTableDTO';
 import ISearchTableDTO from '@modules/tables/Dtos/ISearchTableDTO';
 import IDeleteByIdTableDTO from '@modules/tables/Dtos/IDeleteByIdTableDTO';
+import IRemoveCustomerTableDTO from '@modules/tables/Dtos/IRemoveCustomerTableDTO';
 import ITableRepository from '../ITableRepository';
 
 class FakeTableRepository implements ITableRepository {
@@ -151,27 +152,23 @@ class FakeTableRepository implements ITableRepository {
     return findTables;
   }
 
-  // public async removeCustomer({
-  //   table_id,
-  //   customer_id,
-  // }: IRemoveCustomerTableDTO): Promise<Table | undefined> {
-  //   const findIndexTable = this.tables.findIndex(({ id }) => id === table_id);
-  //   if (findIndexTable > -1) {
-  //     const findIndexCustomer = this.tables[
-  //       findIndexTable
-  //     ].table_customer.findIndex(
-  //       findIndex => findIndex.customer_id === customer_id,
-  //     );
+  public async removeCustomer({
+    table_id,
+    customer_id,
+  }: IRemoveCustomerTableDTO): Promise<void> {
+    const findIndexTable = this.tables.findIndex(({ id }) => id === table_id);
+    if (findIndexTable > -1) {
+      const findIndexCustomer = this.tables[
+        findIndexTable
+      ].table_customer.findIndex(
+        findIndex => findIndex.customer_id === customer_id,
+      );
 
-  //     if (findIndexCustomer > -1) {
-  //       delete this.tables[findIndexTable].table_customer[findIndexCustomer];
-  //     } else {
-  //       return this.tables[findIndexTable];
-  //     }
-  //   }
-
-  //   return undefined;
-  // }
+      if (findIndexCustomer > -1) {
+        delete this.tables[findIndexTable].table_customer[findIndexCustomer];
+      }
+    }
+  }
 
   public async deleteById({
     id,

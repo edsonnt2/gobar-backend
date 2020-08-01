@@ -10,13 +10,18 @@ import IFindByCustomerTableDTO from '@modules/tables/Dtos/IFindByCustomerTableDT
 import IFindByIdTableDTO from '@modules/tables/Dtos/IFindByIdTableDTO';
 import ISearchTableDTO from '@modules/tables/Dtos/ISearchTableDTO';
 import IDeleteByIdTableDTO from '@modules/tables/Dtos/IDeleteByIdTableDTO';
+import IRemoveCustomerTableDTO from '@modules/tables/Dtos/IRemoveCustomerTableDTO';
 import Table from '../entities/Table';
+import TableCustomer from '../entities/TableCustomer';
 
 class TableRepository implements ITableRepository {
   private ormRepository: Repository<Table>;
 
+  private ormTableCustomer: Repository<TableCustomer>;
+
   constructor() {
     this.ormRepository = getRepository(Table);
+    this.ormTableCustomer = getRepository(TableCustomer);
   }
 
   public async create({
@@ -277,6 +282,16 @@ class TableRepository implements ITableRepository {
     await this.ormRepository.delete({
       id,
       business_id,
+    });
+  }
+
+  public async removeCustomer({
+    table_id,
+    customer_id,
+  }: IRemoveCustomerTableDTO): Promise<void> {
+    await this.ormTableCustomer.delete({
+      customer_id,
+      table_id,
     });
   }
 

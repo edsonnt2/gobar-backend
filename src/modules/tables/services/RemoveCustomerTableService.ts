@@ -53,7 +53,10 @@ class RemoveCustomerTableService {
       filterCustomer => filterCustomer.customer_id !== customer_id,
     );
 
-    await this.tableRepository.save(table);
+    await this.tableRepository.removeCustomer({
+      table_id,
+      customer_id,
+    });
 
     return table;
   }

@@ -7,6 +7,7 @@ import IFindByIdTableDTO from '../Dtos/IFindByIdTableDTO';
 import IFindByIdsTableDTO from '../Dtos/IFindByIdsTableDTO';
 import IFindByCustomerTableDTO from '../Dtos/IFindByCustomerTableDTO';
 import IDeleteByIdTableDTO from '../Dtos/IDeleteByIdTableDTO';
+import IRemoveCustomerTableDTO from '../Dtos/IRemoveCustomerTableDTO';
 
 export default interface ITableRepository {
   create({
@@ -29,10 +30,10 @@ export default interface ITableRepository {
     business_id,
     closed,
   }: IFindByCustomerTableDTO): Promise<Table | undefined>;
-  // removeCustomer({
-  //   table_id,
-  //   customer_id,
-  // }: IRemoveCustomerTableDTO): Promise<Table | undefined>;
+  removeCustomer({
+    table_id,
+    customer_id,
+  }: IRemoveCustomerTableDTO): Promise<void>;
   deleteById({ id, business_id }: IDeleteByIdTableDTO): Promise<void>;
   save(table: Table): Promise<void>;
 }

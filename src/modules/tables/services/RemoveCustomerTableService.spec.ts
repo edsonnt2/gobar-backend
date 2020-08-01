@@ -32,6 +32,8 @@ describe('RemoveCustomerTable', () => {
   });
 
   it('should be able to remove customer a table', async () => {
+    const removeCustomerSpy = jest.spyOn(fakeTableRepository, 'removeCustomer');
+
     const newTable = await fakeTableRepository.create({
       business_id: business.id,
       operator_id: 'operator-id',
@@ -46,6 +48,7 @@ describe('RemoveCustomerTable', () => {
     });
 
     expect(table).toBe(newTable);
+    expect(removeCustomerSpy).toBeCalledTimes(1);
   });
 
   it('should not be able to remove customer a table with business no-exists', async () => {

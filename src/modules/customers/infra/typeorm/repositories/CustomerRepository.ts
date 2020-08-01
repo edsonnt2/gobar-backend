@@ -92,50 +92,53 @@ class CustomerRepository implements ICustomerRepository {
 
     const search = removeAccents(findSearch).toLowerCase().trim();
 
-    const whereUser: {
-      [key: string]: FindOperator<string>;
-      customer_id: FindOperator<string>;
-    }[] = [];
+    const whereCustomer: { [key: string]: FindOperator<string> }[] = [];
+    const whereCustomerOne: { [key: string]: FindOperator<string> }[] = [
+      {
+        label_name: Like(`%${search}%`),
+      },
+      {
+        email: Like(`%${findSearch.toLowerCase().trim()}%`),
+      },
+    ];
+    if (isNumber)
+      whereCustomerOne.push({
+        cell_phone: Like(`%${isNumber}%`),
+      });
 
     const customersOne = await this.ormRepository.find({
       relations: ['business_customer', 'command', 'table_customer'],
-      where: [
-        {
-          label_name: Like(`%${search}%`),
-        },
-        {
-          email: Like(`%${findSearch.toLowerCase().trim()}%`),
-        },
-        {
-          cell_phone: Like(`%${isNumber}%`),
-        },
-      ],
+      where: whereCustomerOne,
       take: 20,
     });
 
     const notIdCustomers = customersOne.map(({ id }) => id);
 
+    const whereUser: { [key: string]: FindOperator<string> }[] = [];
+    const whereUserOne: { [key: string]: FindOperator<string> }[] = [
+      {
+        label_name: Like(`%${search}%`),
+        customer_id: IsNull(),
+      },
+      {
+        email: Like(`%${findSearch.toLowerCase().trim()}%`),
+        customer_id: IsNull(),
+      },
+    ];
+
+    if (isNumber)
+      whereUserOne.push({
+        cell_phone: Like(`%${isNumber}%`),
+        customer_id: IsNull(),
+      });
+
     const usersOne = await this.userRepository.find({
-      where: [
-        {
-          label_name: Like(`%${search}%`),
-          customer_id: IsNull(),
-        },
-        {
-          email: Like(`%${findSearch.toLowerCase().trim()}%`),
-          customer_id: IsNull(),
-        },
-        {
-          cell_phone: Like(`%${isNumber}%`),
-          customer_id: IsNull(),
-        },
-      ],
+      where: whereUserOne,
       take: 20,
     });
 
     const notIdUsers = usersOne.map(({ id }) => id);
 
-    const whereCustomer: { [key: string]: FindOperator<string> }[] = [];
     search
       .trim()
       .split(' ')
@@ -148,82 +151,99 @@ class CustomerRepository implements ICustomerRepository {
         whereCustomer.push(
           {
             label_name: Like(`%${searchSeparator}%`),
-            id: Raw(alias =>
-              notIdCustomers
-                .map((id, index) => {
-                  const and = index > 0 ? ' AND ' : '';
-                  return `${and + alias} != '${id}'`;
-                })
-                .join(''),
-            ),
+            ...(notIdCustomers.length > 0 && {
+              id: Raw(alias =>
+                notIdCustomers
+                  .map((id, index) => {
+                    const and = index > 0 ? ' AND ' : '';
+                    return `${and + alias} != '${id}'`;
+                  })
+                  .join(''),
+              ),
+            }),
           },
           {
             email: Like(`%${searchSeparator}%`),
-            id: Raw(alias =>
-              notIdCustomers
-                .map((id, index) => {
-                  const and = index > 0 ? ' AND ' : '';
-                  return `${and + alias} != '${id}'`;
-                })
-                .join(''),
-            ),
-          },
-          {
-            cell_phone: Like(`%${isNumberSeparator}%`),
-            id: Raw(alias =>
-              notIdCustomers
-                .map((id, index) => {
-                  const and = index > 0 ? ' AND ' : '';
-                  return `${and + alias} != '${id}'`;
-                })
-                .join(''),
-            ),
+            ...(notIdCustomers.length > 0 && {
+              id: Raw(alias =>
+                notIdCustomers
+                  .map((id, index) => {
+                    const and = index > 0 ? ' AND ' : '';
+                    return `${and + alias} != '${id}'`;
+                  })
+                  .join(''),
+              ),
+            }),
           },
         );
+
+        if (isNumberSeparator)
+          whereCustomer.push({
+            cell_phone: Like(`%${isNumberSeparator}%`),
+            ...(notIdCustomers.length > 0 && {
+              id: Raw(alias =>
+                notIdCustomers
+                  .map((id, index) => {
+                    const and = index > 0 ? ' AND ' : '';
+                    return `${and + alias} != '${id}'`;
+                  })
+                  .join(''),
+              ),
+            }),
+          });
+
         whereUser.push(
           {
             label_name: Like(`%${searchSeparator}%`),
             customer_id: IsNull(),
-            id: Raw(alias =>
-              notIdUsers
-                .map((id, index) => {
-                  const and = index > 0 ? ' AND ' : '';
-                  return `${and + alias} != '${id}'`;
-                })
-                .join(''),
-            ),
+            ...(notIdUsers.length > 0 && {
+              id: Raw(alias =>
+                notIdUsers
+                  .map((id, index) => {
+                    const and = index > 0 ? ' AND ' : '';
+                    return `${and + alias} != '${id}'`;
+                  })
+                  .join(''),
+              ),
+            }),
           },
           {
             email: Like(`%${searchSeparator}%`),
             customer_id: IsNull(),
-            id: Raw(alias =>
-              notIdUsers
-                .map((id, index) => {
-                  const and = index > 0 ? ' AND ' : '';
-                  return `${and + alias} != '${id}'`;
-                })
-                .join(''),
-            ),
-          },
-          {
-            cell_phone: Like(`%${isNumberSeparator}%`),
-            customer_id: IsNull(),
-            id: Raw(alias =>
-              notIdUsers
-                .map((id, index) => {
-                  const and = index > 0 ? ' AND ' : '';
-                  return `${and + alias} != '${id}'`;
-                })
-                .join(''),
-            ),
+            ...(notIdUsers.length > 0 && {
+              id: Raw(alias =>
+                notIdUsers
+                  .map((id, index) => {
+                    const and = index > 0 ? ' AND ' : '';
+                    return `${and + alias} != '${id}'`;
+                  })
+                  .join(''),
+              ),
+            }),
           },
         );
+
+        if (isNumberSeparator)
+          whereUser.push({
+            cell_phone: Like(`%${isNumberSeparator}%`),
+            customer_id: IsNull(),
+            ...(notIdUsers.length > 0 && {
+              id: Raw(alias =>
+                notIdUsers
+                  .map((id, index) => {
+                    const and = index > 0 ? ' AND ' : '';
+                    return `${and + alias} != '${id}'`;
+                  })
+                  .join(''),
+              ),
+            }),
+          });
       });
 
     const customersTwo =
       customersOne.length < 20
         ? await this.ormRepository.find({
-            relations: ['business_customer', 'command'],
+            relations: ['business_customer', 'command', 'table_customer'],
             where: whereCustomer,
             take: 20 - customersOne.length,
           })

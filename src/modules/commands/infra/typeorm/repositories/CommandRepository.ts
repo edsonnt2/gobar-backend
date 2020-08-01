@@ -155,12 +155,7 @@ class CommandRepository implements ICommandRepository {
     business_id,
     closed,
   }: ISearchCommandDTO): Promise<Command[]> {
-    const isNumber = search
-      .split('')
-      .filter(char => Number(char) || char === '0')
-      .join('');
     const newSearch = removeAccents(search).toLowerCase().trim();
-
     const searchSql: string[] = [];
     let parameters: ObjectLiteral = {};
 
@@ -171,14 +166,14 @@ class CommandRepository implements ICommandRepository {
         .join('');
 
       const queryNumberSeparator =
-        isNumber !== ''
+        isNumberSeparator !== ''
           ? `command.number LIKE :number${String(
               index,
             )} OR customer.cell_phone LIKE :number${String(index)} OR
           customer.cpf_or_cnpj LIKE :number${String(index)} OR `
           : '';
 
-      if (isNumber !== '') {
+      if (isNumberSeparator !== '') {
         parameters = {
           ...parameters,
           [`number${String(index)}`]: `%${isNumberSeparator}%`,
