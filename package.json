@@ -6,8 +6,8 @@
   "scripts": {
     "build": "rm  -rf dist && babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
     "start": "node dist/shared/infra/http/server.js",
-    "dev": "ts-node-dev -r tsconfig-paths/register --inspect --respawn --transpileOnly --ignore-watch node_modules --no-notify src/shared/infra/http/server.ts",
-    "start:ts": "ts-node -r tsconfig-paths/register src/shared/infra/http/server.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register --inspect --respawn --transpile-only --ignore-watch node_modules --no-notify src/shared/infra/http/server.ts",
+    "start:ts": "ts-node -r tsconfig-paths/register --transpile-only src/shared/infra/http/server.ts",
     "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "test": "jest"
   },
