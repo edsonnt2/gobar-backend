@@ -166,10 +166,10 @@ class TableRepository implements ITableRepository {
 
     const table = await this.ormRepository
       .createQueryBuilder('table')
+      .innerJoinAndSelect('table.table_customer', 'table_customer')
       .leftJoinAndSelect('table.table_product', 'table_product')
       .leftJoinAndSelect('table_product.operator', 'operator')
       .leftJoinAndSelect('table_product.product', 'product')
-      .leftJoinAndSelect('table.table_customer', 'table_customer')
       .leftJoinAndSelect('table_customer.customer', 'customer')
       .leftJoinAndSelect('customer.user', 'user')
       .select([
@@ -253,8 +253,8 @@ class TableRepository implements ITableRepository {
 
     const tables = await this.ormRepository
       .createQueryBuilder('table')
-      .leftJoinAndSelect('table.table_customer', 'table_customer')
-      .leftJoinAndSelect('table_customer.customer', 'customer')
+      .innerJoinAndSelect('table.table_customer', 'table_customer')
+      .innerJoinAndSelect('table_customer.customer', 'customer')
       .leftJoinAndSelect('customer.user', 'user')
       .select([
         'table.id',
