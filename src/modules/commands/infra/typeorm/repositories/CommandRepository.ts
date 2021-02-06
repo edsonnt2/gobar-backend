@@ -59,6 +59,8 @@ class CommandRepository implements ICommandRepository {
       .leftJoinAndSelect('command_product.operator', 'operator')
       .leftJoinAndSelect('command_product.product', 'product')
       .leftJoinAndSelect('command.customer', 'customer')
+      .leftJoinAndSelect('customer.table_customer', 'table_customer')
+      .leftJoinAndSelect('table_customer.table', 'table')
       .leftJoinAndSelect('customer.user', 'user')
       .select([
         'command',
@@ -68,6 +70,8 @@ class CommandRepository implements ICommandRepository {
         'operator.avatar',
         'customer.name',
         'user.avatar',
+        'table_customer',
+        'table',
       ])
       .where(
         `command.number=:number AND command.business_id=:business_id ${hasClosed}`,

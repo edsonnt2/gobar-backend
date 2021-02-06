@@ -37,4 +37,4 @@ This project is under the MIT license. See the LICENSE for more information.
 
 ---
 
-Made by Edson Rodrigo ❤️ [get in touch!](https://linkdin.com/in/edson-rodrigo) 😉️
+Made by Edson Rodrigo ❤️ [get in touch!](https://linkedin.com/in/edson-rodrigo) 😉️
