@@ -5,8 +5,12 @@
   "username": "postgres",
   "password": "postgres",
   "database": "gobar",
-  "entities": ["./dist/modules/**/infra/typeorm/entities/*.js"],
-  "migrations": ["./dist/shared/infra/typeorm/migrations/*.js"],
+  "entities": [
+    "./src/modules/**/infra/typeorm/entities/*.ts"
+  ],
+  "migrations": [
+    "./src/shared/infra/typeorm/migrations/*.ts"
+  ],
   "cli": {
     "entitiesDir": "./dist/modules/**/infra/typeorm/entities",
     "migrationsDir": "../dist/shared/infra/typeorm/migrations"
