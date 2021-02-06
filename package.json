@@ -30,7 +30,7 @@
     "redis": "^3.0.2",
     "reflect-metadata": "^0.1.10",
     "tsyringe": "^4.3.0",
-    "typeorm": "0.2.24"
+    "typeorm": "^0.2.30"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",
