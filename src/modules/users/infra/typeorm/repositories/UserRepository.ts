@@ -37,7 +37,7 @@ class UserRepository implements IUserRepository {
   public async findByEmail(email: string): Promise<User | undefined> {
     const user = await this.ormRepository.findOne({
       where: {
-        email: email.toLowerCase().trim(),
+        email: email?.toLowerCase()?.trim(),
       },
     });
 

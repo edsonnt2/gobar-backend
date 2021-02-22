@@ -29,6 +29,8 @@ class AuthenticationUserService {
   }: IRequest): Promise<{ user: User; token: string }> {
     let user;
 
+    if (!cellPhoneOrEmail) throw new AppError('Credentials is required');
+
     user = await this.userRepository.findByEmail(cellPhoneOrEmail);
 
     if (!user) {
