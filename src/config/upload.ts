@@ -15,7 +15,7 @@ const folderTmp = path.resolve(__dirname, '..', '..', 'tmp');
 
 export default {
   folderTmp,
-  folderUpload: path.join(folderTmp, 'uploads'),
+  folderUpload: path.resolve(__dirname, '..', '..', 'uploads'),
   multer: {
     storage: multer.diskStorage({
       destination: folderTmp,
