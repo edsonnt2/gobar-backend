@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import { differenceInYears, format } from 'date-fns';
 import AppError from '@shared/error/AppError';
 import Customer from '@modules/customers/infra/typeorm/entities/Customer';
-import ICpfAndCnpjProvider from '@shared/provider/CpfOrCnpjProvider/models/ICpfAndCnpjProvider';
+import ITaxIdProvider from '@shared/provider/TaxIdProvider/models/ITaxIdProvider';
 import IBusinessRepository from '@modules/business/repositories/IBusinessRepository';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import ICustomerRepository from '../repositories/ICustomerRepository';
@@ -11,7 +11,7 @@ interface IRequest {
   customer_id?: string;
   cell_phone?: string;
   email?: string;
-  cpf_or_cnpj?: string;
+  taxId?: string;
   business_id: string;
   name?: string;
   birthDate?: string;
@@ -30,8 +30,8 @@ class CreateCustomerService {
     @inject('UserRepository')
     private userRepository: IUserRepository,
 
-    @inject('CpfAndCnpjProvider')
-    private cpfAndCnpjProvider: ICpfAndCnpjProvider,
+    @inject('TaxIdProvider')
+    private cpfAndCnpjProvider: ITaxIdProvider,
   ) {}
 
   public async execute({
@@ -39,7 +39,7 @@ class CreateCustomerService {
     customer_id,
     cell_phone,
     email,
-    cpf_or_cnpj,
+    taxId,
     name,
     birthDate,
     gender,
@@ -98,30 +98,30 @@ class CreateCustomerService {
       }
     }
 
-    let newCpfOrCnpj: string | undefined;
-    if (cpf_or_cnpj) {
-      const isCpfOrCnpj = this.cpfAndCnpjProvider.validateCpfOrCnpj({
-        cpf_or_cnpj,
+    let newtaxId: string | undefined;
+    if (taxId) {
+      const istaxId = this.cpfAndCnpjProvider.validatetaxId({
+        taxId,
       });
 
-      if (!isCpfOrCnpj) {
+      if (!istaxId) {
         throw new AppError('Cpf or Cnpf informed is invalid');
       }
-      const { type } = isCpfOrCnpj;
+      const { type } = istaxId;
 
-      newCpfOrCnpj = this.cpfAndCnpjProvider.stripCpfOrCnpj({
-        cpf_or_cnpj,
+      newtaxId = this.cpfAndCnpjProvider.stripTaxId({
+        taxId,
         type,
       });
 
-      const cpfOrCnpjCustomer = await this.customerRepository.findInCustomer({
-        find: newCpfOrCnpj,
-        where: 'cpf_or_cnpj',
+      const taxIdCustomer = await this.customerRepository.findInCustomer({
+        find: newtaxId,
+        where: 'taxId',
       });
 
-      if (cpfOrCnpjCustomer) {
-        if (!customer_id || cpfOrCnpjCustomer.id !== customer_id) {
-          if (newCpfOrCnpj.length === 11) {
+      if (taxIdCustomer) {
+        if (!customer_id || taxIdCustomer.id !== customer_id) {
+          if (newtaxId.length === 11) {
             throw new AppError('CPF already registered at another customer');
           } else {
             throw new AppError('CNPJ already registered at another customer');
@@ -154,9 +154,9 @@ class CreateCustomerService {
           !customer.email && {
             email,
           }),
-        ...(newCpfOrCnpj &&
-          !customer.cpf_or_cnpj && {
-            cpf_or_cnpj: Number(newCpfOrCnpj),
+        ...(newtaxId &&
+          !customer.taxId && {
+            taxId: Number(newtaxId),
           }),
       });
 
@@ -183,7 +183,7 @@ class CreateCustomerService {
       name,
       cell_phone: formattedToNumber,
       email,
-      cpf_or_cnpj: newCpfOrCnpj ? Number(newCpfOrCnpj) : undefined,
+      taxId: newtaxId ? Number(newtaxId) : undefined,
       birthDate: format(parsedDate, 'yyyy/MM/dd'),
       gender,
       business_id,

@@ -24,7 +24,7 @@ class FakeBusinessRepository implements IBusinessRepository {
     where,
   }: IFindInBusinessDTO): Promise<Business | undefined> {
     const newFind =
-      where === 'cell_phone' || where === 'phone' || where === 'cpf_or_cnpj'
+      where === 'cell_phone' || where === 'phone' || where === 'taxId'
         ? Number(find)
         : find;
 

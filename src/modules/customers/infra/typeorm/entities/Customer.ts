@@ -44,7 +44,7 @@ export default class Customer {
   gender: string;
 
   @Column()
-  cpf_or_cnpj: number;
+  taxId: number;
 
   @OneToMany(
     () => BusinessCustomer,

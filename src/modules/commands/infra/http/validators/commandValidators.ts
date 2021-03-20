@@ -5,8 +5,8 @@ export default {
     [Segments.BODY]: {
       customer_id: Joi.string().required(),
       number: Joi.number().required(),
-      ingress_id: Joi.string(),
-      prepaid_ingress: Joi.boolean(),
+      entrance_id: Joi.string(),
+      prepaid_entrance: Joi.boolean(),
       value_consume: Joi.number(),
     },
   }),

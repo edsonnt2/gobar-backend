@@ -61,13 +61,13 @@ export default class Command {
     precision: 10,
     scale: 2,
   })
-  value_ingress: number;
+  value_entrance: number;
 
   @Column('boolean')
-  ingress_consume: boolean;
+  entrance_consume: boolean;
 
   @Column('boolean')
-  prepaid_ingress: boolean;
+  prepaid_entrance: boolean;
 
   @Column('decimal', {
     precision: 10,

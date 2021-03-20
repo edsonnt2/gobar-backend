@@ -5,9 +5,9 @@ export default class AddFieldLabelInTables1593803706319
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.changeColumn(
       'users',
-      'cpf_or_cnpj',
+      'taxId',
       new TableColumn({
-        name: 'cpf_or_cnpj',
+        name: 'taxId',
         type: 'varchar',
         isNullable: true,
       }),
@@ -15,9 +15,9 @@ export default class AddFieldLabelInTables1593803706319
 
     await queryRunner.changeColumn(
       'customers',
-      'cpf_or_cnpj',
+      'taxId',
       new TableColumn({
-        name: 'cpf_or_cnpj',
+        name: 'taxId',
         type: 'varchar',
         isNullable: true,
       }),
@@ -59,7 +59,7 @@ export default class AddFieldLabelInTables1593803706319
     );
 
     await queryRunner.addColumn(
-      'ingress',
+      'entrance',
       new TableColumn({
         name: 'label_description',
         type: 'varchar',
@@ -155,7 +155,7 @@ export default class AddFieldLabelInTables1593803706319
       }),
     ]);
 
-    await queryRunner.dropColumn('ingress', 'label_description');
+    await queryRunner.dropColumn('entrance', 'label_description');
 
     await queryRunner.dropColumn('customers', 'label_name');
 
@@ -181,9 +181,9 @@ export default class AddFieldLabelInTables1593803706319
 
     await queryRunner.changeColumn(
       'customers',
-      'cpf_or_cnpj',
+      'taxId',
       new TableColumn({
-        name: 'cpf_or_cnpj',
+        name: 'taxId',
         type: 'decimal',
         isNullable: true,
       }),
@@ -191,9 +191,9 @@ export default class AddFieldLabelInTables1593803706319
 
     await queryRunner.changeColumn(
       'users',
-      'cpf_or_cnpj',
+      'taxId',
       new TableColumn({
-        name: 'cpf_or_cnpj',
+        name: 'taxId',
         type: 'decimal',
         isNullable: true,
       }),

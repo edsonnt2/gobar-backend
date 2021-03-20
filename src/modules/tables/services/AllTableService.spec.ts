@@ -21,7 +21,7 @@ describe('AllTable', () => {
       user_id: 'user-id',
       name: 'New Business',
       categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: 88978623069,
+      taxId: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',

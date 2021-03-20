@@ -1,12 +1,12 @@
 import AppError from '@shared/error/AppError';
 import FakeAuthProvider from '@shared/provider/AuthProvider/fakes/FakeAuthProvider';
 import FakeStorageProvider from '@shared/provider/StorageProvider/fakes/FakeStorageProvider';
-import FakeCpfAndCnpjProvider from '@shared/provider/CpfOrCnpjProvider/fakes/FakeCpfAndCnpjProvider';
+import FakeTaxIdProvider from '@shared/provider/TaxIdProvider/fakes/FakeTaxIdProvider';
 import FakeBusinessRepository from '../repositories/fakes/FakeBusinessRepository';
 import CreateBusinessService from './CreateBusinessService';
 
 let fakeBusinessRepository: FakeBusinessRepository;
-let fakeCpfAndCnpjProvider: FakeCpfAndCnpjProvider;
+let fakeTaxIdProvider: FakeTaxIdProvider;
 let fakeAuthProvider: FakeAuthProvider;
 let fakeStorageProvider: FakeStorageProvider;
 let createBusinessService: CreateBusinessService;
@@ -14,12 +14,12 @@ let createBusinessService: CreateBusinessService;
 describe('CreateBusiness', () => {
   beforeEach(() => {
     fakeBusinessRepository = new FakeBusinessRepository();
-    fakeCpfAndCnpjProvider = new FakeCpfAndCnpjProvider();
+    fakeTaxIdProvider = new FakeTaxIdProvider();
     fakeAuthProvider = new FakeAuthProvider();
     fakeStorageProvider = new FakeStorageProvider();
     createBusinessService = new CreateBusinessService(
       fakeBusinessRepository,
-      fakeCpfAndCnpjProvider,
+      fakeTaxIdProvider,
       fakeAuthProvider,
       fakeStorageProvider,
     );
@@ -34,7 +34,7 @@ describe('CreateBusiness', () => {
       categories: 'bares',
       cell_phone: '19999990999',
       phone: '1933330333',
-      cpf_or_cnpj: '889.786.230-69',
+      taxId: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,
       complement: 'Complement Test',
@@ -57,7 +57,7 @@ describe('CreateBusiness', () => {
       categories: 'bares',
       cell_phone: '19999999999',
       phone: '1933333333',
-      cpf_or_cnpj: '889.786.230-69',
+      taxId: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,
       complement: 'Complement Test',
@@ -76,7 +76,7 @@ describe('CreateBusiness', () => {
       user_id: 'user-id',
       name: 'New Business',
       categories: 'bares',
-      cpf_or_cnpj: '889.786.230-69',
+      taxId: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
@@ -96,7 +96,7 @@ describe('CreateBusiness', () => {
       categories: 'bares',
       cell_phone: '19999999996',
       phone: '1933333333',
-      cpf_or_cnpj: '889.786.230-69',
+      taxId: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,
       complement: 'Complement Test',
@@ -112,7 +112,7 @@ describe('CreateBusiness', () => {
       categories: 'bares',
       cell_phone: '19999999997',
       phone: '1933333332',
-      cpf_or_cnpj: '889.786.230-69',
+      taxId: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,
       complement: 'Complement Test',
@@ -134,7 +134,7 @@ describe('CreateBusiness', () => {
         categories: 'bar one, bar two, bar three, bar four, bar five',
         cell_phone: '19999999999',
         phone: '1933333333',
-        cpf_or_cnpj: '889.786.230-69',
+        taxId: '889.786.230-69',
         zip_code: '99999-999',
         number: 9,
         complement: 'Complement Test',
@@ -153,7 +153,7 @@ describe('CreateBusiness', () => {
       categories: 'bares',
       cell_phone: '19999999999',
       phone: '1933333333',
-      cpf_or_cnpj: '889.786.230-69',
+      taxId: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,
       complement: 'Complement Test',
@@ -170,7 +170,7 @@ describe('CreateBusiness', () => {
         categories: 'bares',
         cell_phone: '19999999999',
         phone: '1933333333',
-        cpf_or_cnpj: '889.786.230-69',
+        taxId: '889.786.230-69',
         zip_code: '99999-999',
         number: 9,
         complement: 'Complement Test',
@@ -189,7 +189,7 @@ describe('CreateBusiness', () => {
       categories: 'bares',
       cell_phone: '(19) 99999-9999',
       phone: '1933333333',
-      cpf_or_cnpj: '889.786.230-69',
+      taxId: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,
       complement: 'Complement Test',
@@ -206,7 +206,7 @@ describe('CreateBusiness', () => {
         categories: 'bares',
         cell_phone: '19999999999',
         phone: '1933333333',
-        cpf_or_cnpj: '889.786.230-69',
+        taxId: '889.786.230-69',
         zip_code: '99999-999',
         number: 9,
         complement: 'Complement Test',
@@ -225,7 +225,7 @@ describe('CreateBusiness', () => {
       categories: 'bares',
       cell_phone: '19999999996',
       phone: '1933333333',
-      cpf_or_cnpj: '889.786.230-69',
+      taxId: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,
       complement: 'Complement Test',
@@ -242,7 +242,7 @@ describe('CreateBusiness', () => {
         categories: 'bares',
         cell_phone: '19999999997',
         phone: '1933333333',
-        cpf_or_cnpj: '889.786.230-69',
+        taxId: '889.786.230-69',
         zip_code: '99999-999',
         number: 9,
         complement: 'Complement Test',
@@ -262,7 +262,7 @@ describe('CreateBusiness', () => {
         categories: 'bares',
         cell_phone: '19999999996',
         phone: '1933333333',
-        cpf_or_cnpj: 'invalid-cpf-or-cnpj',
+        taxId: 'invalid-taxId',
         zip_code: '99999-999',
         number: 9,
         complement: 'Complement Test',
@@ -281,7 +281,7 @@ describe('CreateBusiness', () => {
       categories: 'bares',
       cell_phone: '19999999996',
       phone: '1933333333',
-      cpf_or_cnpj: '889.786.230-69',
+      taxId: '889.786.230-69',
       zip_code: '99999-999',
       number: 9,
       complement: 'Complement Test',
@@ -298,7 +298,7 @@ describe('CreateBusiness', () => {
         categories: 'bares',
         cell_phone: '19999999997',
         phone: '1933333332',
-        cpf_or_cnpj: '889.786.230-69',
+        taxId: '889.786.230-69',
         zip_code: '99999-999',
         number: 9,
         complement: 'Complement Test',
@@ -317,7 +317,7 @@ describe('CreateBusiness', () => {
       categories: 'bares',
       cell_phone: '19999999996',
       phone: '1933333333',
-      cpf_or_cnpj: '51874860073230',
+      taxId: '51874860073230',
       zip_code: '99999-999',
       number: 9,
       complement: 'Complement Test',
@@ -334,7 +334,7 @@ describe('CreateBusiness', () => {
         categories: 'bares',
         cell_phone: '19999999997',
         phone: '1933333332',
-        cpf_or_cnpj: '51874860073230',
+        taxId: '51874860073230',
         zip_code: '99999-999',
         number: 9,
         complement: 'Complement Test',

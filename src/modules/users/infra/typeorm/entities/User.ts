@@ -48,7 +48,7 @@ export default class User {
   gender: string;
 
   @Column()
-  cpf_or_cnpj: number;
+  taxId: number;
 
   @OneToMany(() => Business, business => business.user, { eager: true })
   business: Business[];

@@ -7,7 +7,7 @@ export default interface ICreateBusinessDTO {
   }[];
   cell_phone?: number;
   phone?: number;
-  cpf_or_cnpj: number;
+  taxId: number;
   zip_code: string;
   number: number;
   complement?: string;

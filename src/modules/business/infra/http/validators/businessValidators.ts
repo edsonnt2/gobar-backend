@@ -7,7 +7,7 @@ export default {
       categories: Joi.string().required(),
       cell_phone: Joi.string(),
       phone: Joi.string(),
-      cpf_or_cnpj: Joi.string().required().min(14).max(18).trim(),
+      taxId: Joi.string().required().min(14).max(18).trim(),
       zip_code: Joi.string().required().min(9).max(9).trim(),
       street: Joi.string().required(),
       number: Joi.number().required(),

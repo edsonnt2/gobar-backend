@@ -44,7 +44,7 @@ class FakeCustomerRepository implements ICustomerRepository {
     where,
   }: IFindInCustomerDTO): Promise<Customer | undefined> {
     const newFind =
-      where === 'cell_phone' || where === 'cpf_or_cnpj' ? Number(find) : find;
+      where === 'cell_phone' || where === 'taxId' ? Number(find) : find;
 
     const getCustomer = this.customers.find(
       findCustomer => findCustomer[where] === newFind,

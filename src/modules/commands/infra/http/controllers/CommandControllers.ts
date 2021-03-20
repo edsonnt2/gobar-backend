@@ -9,8 +9,8 @@ export default class CommandControllers {
     const {
       customer_id,
       number,
-      ingress_id,
-      prepaid_ingress,
+      entrance_id,
+      prepaid_entrance,
       value_consume,
     } = req.body;
 
@@ -21,8 +21,8 @@ export default class CommandControllers {
       user_id: req.user.id,
       customer_id,
       number,
-      ingress_id,
-      prepaid_ingress,
+      entrance_id,
+      prepaid_entrance,
       value_consume,
     });
 

@@ -14,8 +14,8 @@ export default interface ICommandRepository {
     business_id,
     customer_id,
     number,
-    value_ingress,
-    prepaid_ingress,
+    value_entrance,
+    prepaid_entrance,
     value_consume,
   }: ICreateCommandDTO): Promise<Command>;
   findByNumber({

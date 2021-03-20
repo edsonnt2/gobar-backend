@@ -30,7 +30,7 @@ class CustomerRepository implements ICustomerRepository {
     cell_phone,
     birthDate,
     gender,
-    cpf_or_cnpj,
+    taxId,
     business_id,
   }: ICreateCustomerDTO): Promise<Customer> {
     const customer = this.ormRepository.create({
@@ -40,7 +40,7 @@ class CustomerRepository implements ICustomerRepository {
       cell_phone,
       birthDate,
       gender,
-      cpf_or_cnpj,
+      taxId,
       business_customer: [{ business_id }],
     });
 
@@ -265,7 +265,7 @@ class CustomerRepository implements ICustomerRepository {
     );
 
     customersOutherBusiness.forEach((_, index) => {
-      delete customersOutherBusiness[index].cpf_or_cnpj;
+      delete customersOutherBusiness[index].taxId;
     });
 
     const usersTwo = await this.userRepository.find({

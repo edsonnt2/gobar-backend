@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import User from '@modules/users/infra/typeorm/entities/User';
 import Product from '@modules/products/infra/typeorm/entities/Product';
-import Ingress from '@modules/ingress/infra/typeorm/entities/Ingress';
+import Entrance from '@modules/entrance/infra/typeorm/entities/Entrance';
 import Command from '@modules/commands/infra/typeorm/entities/Command';
 import CommandClosure from '@modules/commands/infra/typeorm/entities/CommandClosure';
 import Table from '@modules/tables/infra/typeorm/entities/Table';
@@ -50,8 +50,8 @@ export default class Business {
   @OneToMany(() => Product, product => product.business)
   product: Product[];
 
-  @OneToMany(() => Ingress, ingress => ingress.business)
-  ingress: Ingress[];
+  @OneToMany(() => Entrance, entrance => entrance.business)
+  entrance: Entrance[];
 
   @OneToMany(() => Command, command => command.business)
   command: Command[];
@@ -75,7 +75,7 @@ export default class Business {
   phone?: number;
 
   @Column()
-  cpf_or_cnpj: number;
+  taxId: number;
 
   @Column()
   zip_code: string;

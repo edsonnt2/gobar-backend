@@ -28,19 +28,19 @@ export default class CreateCommand1593626733772 implements MigrationInterface {
             type: 'decimal',
           },
           {
-            name: 'value_ingress',
+            name: 'value_entrance',
             type: 'decimal',
             precision: 10,
             scale: 2,
             isNullable: true,
           },
           {
-            name: 'ingress_consume',
+            name: 'entrance_consume',
             type: 'boolean',
             isNullable: true,
           },
           {
-            name: 'prepaid_ingress',
+            name: 'prepaid_entrance',
             type: 'boolean',
             default: false,
           },

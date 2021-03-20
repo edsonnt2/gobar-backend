@@ -1,14 +1,14 @@
 import AppError from '@shared/error/AppError';
 import FakeBusinessRepository from '@modules/business/repositories/fakes/FakeBusinessRepository';
 import FakeCustomerRepository from '@modules/customers/repositories/fakes/FakeCustomerRepository';
-import FakeIngressRepository from '@modules/ingress/repositories/fakes/FakeIngressRepository';
+import FakeEntranceRepository from '@modules/entrance/repositories/fakes/FakeEntranceRepository';
 import FakeCommandRepository from '../repositories/fakes/FakeCommandRepository';
 import CreateCommandService from './CreateCommandService';
 
 let fakeCommandRepository: FakeCommandRepository;
 let fakeBusinessRepository: FakeBusinessRepository;
 let fakeCustomerRepository: FakeCustomerRepository;
-let fakeIngressRepository: FakeIngressRepository;
+let fakeEntranceRepository: FakeEntranceRepository;
 let createCommandService: CreateCommandService;
 let business: { id: string };
 let customer: { id: string };
@@ -18,12 +18,12 @@ describe('CreateCommand', () => {
     fakeCommandRepository = new FakeCommandRepository();
     fakeBusinessRepository = new FakeBusinessRepository();
     fakeCustomerRepository = new FakeCustomerRepository();
-    fakeIngressRepository = new FakeIngressRepository();
+    fakeEntranceRepository = new FakeEntranceRepository();
     createCommandService = new CreateCommandService(
       fakeCommandRepository,
       fakeCustomerRepository,
       fakeBusinessRepository,
-      fakeIngressRepository,
+      fakeEntranceRepository,
     );
 
     jest
@@ -34,7 +34,7 @@ describe('CreateCommand', () => {
       user_id: 'user-id',
       name: 'New Business',
       categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: 88978623069,
+      taxId: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
@@ -52,10 +52,10 @@ describe('CreateCommand', () => {
   });
 
   it('should be able to create a new command', async () => {
-    const ingress = await fakeIngressRepository.create({
+    const entrance = await fakeEntranceRepository.create({
       business_id: business.id,
       consume: false,
-      description: 'Description Ingress',
+      description: 'Description Entrance',
       value: 10,
     });
 
@@ -64,8 +64,8 @@ describe('CreateCommand', () => {
       customer_id: customer.id,
       user_id: 'operator-id',
       number: 100,
-      ingress_id: ingress.id,
-      prepaid_ingress: false,
+      entrance_id: entrance.id,
+      prepaid_entrance: false,
     });
 
     expect(command).toHaveProperty('id');
@@ -98,7 +98,7 @@ describe('CreateCommand', () => {
       user_id: 'user-id',
       name: 'New Business two',
       categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: 88978623069,
+      taxId: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
@@ -160,11 +160,11 @@ describe('CreateCommand', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to create a new command with ingress non-exists', async () => {
-    await fakeIngressRepository.create({
+  it('should not be able to create a new command with entrance non-exists', async () => {
+    await fakeEntranceRepository.create({
       business_id: business.id,
       consume: false,
-      description: 'Description Ingress',
+      description: 'Description Entrance',
       value: 10,
     });
 
@@ -173,18 +173,18 @@ describe('CreateCommand', () => {
         business_id: business.id,
         customer_id: customer.id,
         user_id: 'operator-id',
-        ingress_id: 'ingress-non-exists',
+        entrance_id: 'entrance-non-exists',
         number: 100,
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to create a new command with ingress at outher business', async () => {
+  it('should not be able to create a new command with entrance at outher business', async () => {
     const businessTwo = await fakeBusinessRepository.create({
       user_id: 'user-id',
       name: 'New Business two',
       categories: [{ name: 'bares ' }],
-      cpf_or_cnpj: 88978623069,
+      taxId: 88978623069,
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
@@ -193,10 +193,10 @@ describe('CreateCommand', () => {
       state: 'State Test',
     });
 
-    const ingress = await fakeIngressRepository.create({
+    const entrance = await fakeEntranceRepository.create({
       business_id: businessTwo.id,
       consume: false,
-      description: 'Description Ingress',
+      description: 'Description Entrance',
       value: 10,
     });
 
@@ -205,17 +205,17 @@ describe('CreateCommand', () => {
         business_id: business.id,
         customer_id: customer.id,
         user_id: 'operator-id',
-        ingress_id: ingress.id,
+        entrance_id: entrance.id,
         number: 100,
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to create a new command without informing ingress that is registered', async () => {
-    await fakeIngressRepository.create({
+  it('should not be able to create a new command without informing entrance that is registered', async () => {
+    await fakeEntranceRepository.create({
       business_id: business.id,
       consume: false,
-      description: 'Description Ingress',
+      description: 'Description Entrance',
       value: 10,
     });
 

@@ -3,7 +3,7 @@ import '@modules/users';
 import '@modules/business';
 import '@modules/categories';
 import '@modules/products';
-import '@modules/ingress';
+import '@modules/entrance';
 import '@modules/customers';
 import '@modules/commands';
 import '@modules/tables';

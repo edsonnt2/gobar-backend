@@ -17,7 +17,7 @@ export default {
       name: Joi.string(),
       cell_phone: Joi.string(),
       email: Joi.string(),
-      cpf_or_cnpj: Joi.string(),
+      taxId: Joi.string(),
       gender: Joi.string(),
       birthDate: Joi.string(),
     },

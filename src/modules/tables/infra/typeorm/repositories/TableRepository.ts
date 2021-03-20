@@ -220,7 +220,7 @@ class TableRepository implements ITableRepository {
           ? `table.number LIKE :number${String(
               index,
             )} OR customer.cell_phone LIKE :number${String(index)} OR
-          customer.cpf_or_cnpj LIKE :number${String(index)} OR `
+          customer.taxId LIKE :number${String(index)} OR `
           : '';
 
       if (isNumber !== '') {

@@ -23,7 +23,7 @@ export default class CreateBusinessCustomersAndAddGenderAndPreRegisterInUsers159
         isNullable: true,
       }),
       new TableColumn({
-        name: 'cpf_or_cnpj',
+        name: 'taxId',
         type: 'decimal',
         isNullable: true,
       }),
@@ -112,7 +112,7 @@ export default class CreateBusinessCustomersAndAddGenderAndPreRegisterInUsers159
         isNullable: true,
       }),
       new TableColumn({
-        name: 'cpf_or_cnpj',
+        name: 'taxId',
         type: 'decimal',
         isNullable: true,
       }),

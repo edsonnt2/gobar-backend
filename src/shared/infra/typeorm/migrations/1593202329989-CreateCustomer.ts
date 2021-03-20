@@ -42,7 +42,7 @@ export default class CreateCustomer1593202329989 implements MigrationInterface {
             length: '1',
           },
           {
-            name: 'cpf_or_cnpj',
+            name: 'taxId',
             type: 'decimal',
             isNullable: true,
           },

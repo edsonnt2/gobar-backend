@@ -23,9 +23,9 @@ class CommandRepository implements ICommandRepository {
     business_id,
     customer_id,
     number,
-    value_ingress,
-    ingress_consume,
-    prepaid_ingress,
+    value_entrance,
+    entrance_consume,
+    prepaid_entrance,
     value_consume,
   }: ICreateCommandDTO): Promise<Command> {
     const command = this.ormRepository.create({
@@ -33,9 +33,9 @@ class CommandRepository implements ICommandRepository {
       business_id,
       customer_id,
       number,
-      value_ingress,
-      ingress_consume,
-      prepaid_ingress,
+      value_entrance,
+      entrance_consume,
+      prepaid_entrance,
       value_consume,
     });
 
@@ -174,7 +174,7 @@ class CommandRepository implements ICommandRepository {
           ? `command.number LIKE :number${String(
               index,
             )} OR customer.cell_phone LIKE :number${String(index)} OR
-          customer.cpf_or_cnpj LIKE :number${String(index)} OR `
+          customer.taxId LIKE :number${String(index)} OR `
           : '';
 
       if (isNumberSeparator !== '') {

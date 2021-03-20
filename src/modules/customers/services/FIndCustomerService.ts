@@ -36,7 +36,7 @@ class FindCustomerService {
     );
 
     if (!hasInBusiness) {
-      delete customer.cpf_or_cnpj;
+      delete customer.taxId;
     }
 
     return customer;

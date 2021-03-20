@@ -10,7 +10,7 @@ export default interface IBusinessRepository {
     categories,
     cell_phone,
     phone,
-    cpf_or_cnpj,
+    taxId,
     zip_code,
     street,
     number,

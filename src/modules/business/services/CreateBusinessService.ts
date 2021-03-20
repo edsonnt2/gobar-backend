@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/error/AppError';
 import IAuthProvider from '@shared/provider/AuthProvider/models/IAuthProvider';
 import IStorageProvider from '@shared/provider/StorageProvider/models/IStorageProvider';
-import ICpfAndCnpjProvider from '@shared/provider/CpfOrCnpjProvider/models/ICpfAndCnpjProvider';
+import ITaxIdProvider from '@shared/provider/TaxIdProvider/models/ITaxIdProvider';
 import IBusinessRepository from '../repositories/IBusinessRepository';
 import Business from '../infra/typeorm/entities/Business';
 
@@ -13,7 +13,7 @@ interface IRequest {
   categories: string;
   cell_phone?: string;
   phone?: string;
-  cpf_or_cnpj: string;
+  taxId: string;
   zip_code: string;
   number: number;
   complement?: string;
@@ -29,8 +29,8 @@ class CreateBusinessService {
     @inject('BusinessRepository')
     private businessRepository: IBusinessRepository,
 
-    @inject('CpfAndCnpjProvider')
-    private cpfAndCnpjProvider: ICpfAndCnpjProvider,
+    @inject('TaxIdProvider')
+    private cpfAndCnpjProvider: ITaxIdProvider,
 
     @inject('AuthProvider')
     private authProvider: IAuthProvider,
@@ -46,7 +46,7 @@ class CreateBusinessService {
     categories,
     cell_phone,
     phone,
-    cpf_or_cnpj,
+    taxId,
     zip_code,
     street,
     number,
@@ -107,29 +107,29 @@ class CreateBusinessService {
       }
     }
 
-    const isCpfOrCnpj = this.cpfAndCnpjProvider.validateCpfOrCnpj({
-      cpf_or_cnpj,
+    const istaxId = this.cpfAndCnpjProvider.validatetaxId({
+      taxId,
     });
 
-    if (!isCpfOrCnpj) {
+    if (!istaxId) {
       throw new AppError('Cpf or Cnpf informed is invalid');
     }
 
-    const { type } = isCpfOrCnpj;
+    const { type } = istaxId;
 
-    const stripCpfOrCnpj = this.cpfAndCnpjProvider.stripCpfOrCnpj({
-      cpf_or_cnpj,
+    const stripTaxId = this.cpfAndCnpjProvider.stripTaxId({
+      taxId,
       type,
     });
 
-    const cpfOrCnpjBusiness = await this.businessRepository.findInBusiness({
-      find: stripCpfOrCnpj,
-      where: 'cpf_or_cnpj',
+    const taxIdBusiness = await this.businessRepository.findInBusiness({
+      find: stripTaxId,
+      where: 'taxId',
     });
 
-    if (cpfOrCnpjBusiness) {
-      if (stripCpfOrCnpj.length === 11) {
-        if (cpfOrCnpjBusiness.user_id !== user_id) {
+    if (taxIdBusiness) {
+      if (stripTaxId.length === 11) {
+        if (taxIdBusiness.user_id !== user_id) {
           throw new AppError(
             'CPF registered at another business for another user',
           );
@@ -146,7 +146,7 @@ class CreateBusinessService {
       avatar,
       name,
       categories: formattedCategory,
-      cpf_or_cnpj: Number(stripCpfOrCnpj),
+      taxId: Number(stripTaxId),
       zip_code,
       street,
       number,

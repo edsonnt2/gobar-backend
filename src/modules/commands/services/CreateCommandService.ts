@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/error/AppError';
 import IBusinessRepository from '@modules/business/repositories/IBusinessRepository';
 import ICustomerRepository from '@modules/customers/repositories/ICustomerRepository';
-import IIngressRepository from '@modules/ingress/repositories/IIngressRepository';
+import IEntranceRepository from '@modules/entrance/repositories/IEntranceRepository';
 import ICommandRepository from '../repositories/ICommandRepository';
 import Command from '../infra/typeorm/entities/Command';
 
@@ -10,9 +10,9 @@ interface IRequest {
   user_id: string;
   business_id: string;
   customer_id: string;
-  ingress_id?: string;
+  entrance_id?: string;
   number: number;
-  prepaid_ingress?: boolean;
+  prepaid_entrance?: boolean;
   value_consume?: number;
 }
 
@@ -28,8 +28,8 @@ class CreateCommandService {
     @inject('BusinessRepository')
     private businessRepository: IBusinessRepository,
 
-    @inject('IngressRepository')
-    private ingressRepository: IIngressRepository,
+    @inject('EntranceRepository')
+    private entranceRepository: IEntranceRepository,
   ) {}
 
   public async execute({
@@ -37,8 +37,8 @@ class CreateCommandService {
     business_id,
     customer_id,
     number,
-    ingress_id,
-    prepaid_ingress,
+    entrance_id,
+    prepaid_entrance,
     value_consume,
   }: IRequest): Promise<Command> {
     const business = await this.businessRepository.findById(business_id);
@@ -71,25 +71,25 @@ class CreateCommandService {
 
     if (hasNumber) throw new AppError('Command number already registered');
 
-    let value_ingress: number | undefined;
-    let ingress_consume: boolean | undefined;
-    if (ingress_id) {
-      const ingress = await this.ingressRepository.findById(ingress_id);
+    let value_entrance: number | undefined;
+    let entrance_consume: boolean | undefined;
+    if (entrance_id) {
+      const entrance = await this.entranceRepository.findById(entrance_id);
 
-      if (!ingress) throw new AppError('Ingress not found');
+      if (!entrance) throw new AppError('Entrance not found');
 
-      if (ingress.business_id !== business_id)
-        throw new AppError('Ingress not found at this business');
+      if (entrance.business_id !== business_id)
+        throw new AppError('Entrance not found at this business');
 
-      value_ingress = Number(ingress.value);
-      ingress_consume = ingress.consume;
+      value_entrance = Number(entrance.value);
+      entrance_consume = entrance.consume;
     } else {
-      const ingressInBusiness = await this.ingressRepository.ingressInBusiness(
+      const entranceInBusiness = await this.entranceRepository.entranceInBusiness(
         business_id,
       );
 
-      if (ingressInBusiness)
-        throw new AppError('There are Ingress registered at the Business');
+      if (entranceInBusiness)
+        throw new AppError('There are Entrance registered at the Business');
     }
 
     const command = await this.commandRepository.create({
@@ -97,9 +97,9 @@ class CreateCommandService {
       operator_id: user_id,
       customer_id,
       number,
-      value_ingress,
-      ingress_consume,
-      prepaid_ingress,
+      value_entrance,
+      entrance_consume,
+      prepaid_entrance,
       value_consume,
     });
 

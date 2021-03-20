@@ -23,7 +23,7 @@ export default class CustomerControllers {
       name,
       cell_phone,
       email,
-      cpf_or_cnpj,
+      taxId,
       gender,
       birthDate,
     } = req.body;
@@ -35,7 +35,7 @@ export default class CustomerControllers {
       name,
       cell_phone,
       email,
-      cpf_or_cnpj,
+      taxId,
       gender,
       birthDate,
     });

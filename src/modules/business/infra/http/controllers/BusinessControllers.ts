@@ -7,7 +7,7 @@ export default class BusinessControllers {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
       name,
-      cpf_or_cnpj,
+      taxId,
       categories,
       cell_phone,
       phone,
@@ -28,7 +28,7 @@ export default class BusinessControllers {
       user_id: req.user.id,
       avatar,
       name,
-      cpf_or_cnpj,
+      taxId,
       categories,
       cell_phone,
       phone,
