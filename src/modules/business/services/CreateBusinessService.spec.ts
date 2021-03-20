@@ -254,7 +254,7 @@ describe('CreateBusiness', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to create a new business with invalid cpf or cnpj', async () => {
+  it('should not be able to create a new business with invalid taxId', async () => {
     await expect(
       createBusinessService.execute({
         user_id: 'user-id',

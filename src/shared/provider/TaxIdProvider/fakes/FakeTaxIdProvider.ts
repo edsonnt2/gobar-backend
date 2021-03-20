@@ -3,7 +3,7 @@ import IStripTaxIdDTO from '../Dtos/IStripTaxIdDTO';
 import IValidateTaxIdDTO from '../Dtos/IValidateTaxIdDTO';
 
 class FakeTaxIdProvider implements ITaxIdProvider {
-  public validatetaxId({
+  public validateTaxId({
     taxId,
   }: IValidateTaxIdDTO): { type: 'cpf' | 'cnpj' } | undefined {
     const newtaxId = taxId.replace(/[^0-9]/g, '');

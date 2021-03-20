@@ -5,7 +5,7 @@ import IStripTaxIdDTO from '../Dtos/IStripTaxIdDTO';
 import IValidateTaxIdDTO from '../Dtos/IValidateTaxIdDTO';
 
 class TaxIdProvider implements ITaxIdProvider {
-  public validatetaxId({
+  public validateTaxId({
     taxId,
   }: IValidateTaxIdDTO): { type: 'cpf' | 'cnpj' } | undefined {
     return (

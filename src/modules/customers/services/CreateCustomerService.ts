@@ -100,12 +100,12 @@ class CreateCustomerService {
 
     let newtaxId: string | undefined;
     if (taxId) {
-      const istaxId = this.cpfAndCnpjProvider.validatetaxId({
+      const istaxId = this.cpfAndCnpjProvider.validateTaxId({
         taxId,
       });
 
       if (!istaxId) {
-        throw new AppError('Cpf or Cnpf informed is invalid');
+        throw new AppError('TaxId informed is invalid');
       }
       const { type } = istaxId;
 
