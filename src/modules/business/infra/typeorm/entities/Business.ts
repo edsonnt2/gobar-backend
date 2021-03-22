@@ -96,10 +96,10 @@ export default class Business {
   label_street: string;
 
   @Column()
-  district: string;
+  neighborhood: string;
 
   @Column()
-  label_district: string;
+  label_neighborhood: string;
 
   @Column()
   city: string;

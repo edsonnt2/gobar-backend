@@ -16,7 +16,7 @@ export default class BusinessControllers {
       number,
       complement,
       city,
-      district,
+      neighborhood,
       state,
     } = req.body;
 
@@ -37,7 +37,7 @@ export default class BusinessControllers {
       number,
       complement,
       city,
-      district,
+      neighborhood,
       state,
     });
 

@@ -12,7 +12,7 @@ export default interface ICreateBusinessDTO {
   number: number;
   complement?: string;
   street: string;
-  district: string;
+  neighborhood: string;
   city: string;
   state: string;
 }

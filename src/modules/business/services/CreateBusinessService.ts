@@ -18,7 +18,7 @@ interface IRequest {
   number: number;
   complement?: string;
   street: string;
-  district: string;
+  neighborhood: string;
   city: string;
   state: string;
 }
@@ -51,7 +51,7 @@ class CreateBusinessService {
     street,
     number,
     complement,
-    district,
+    neighborhood,
     city,
     state,
   }: IRequest): Promise<{ business: Business; token: string }> {
@@ -151,7 +151,7 @@ class CreateBusinessService {
       street,
       number,
       complement,
-      district,
+      neighborhood,
       city,
       state,
       ...(formattedCellPhone && { cell_phone: Number(formattedCellPhone) }),

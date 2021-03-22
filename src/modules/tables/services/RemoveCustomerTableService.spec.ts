@@ -25,7 +25,7 @@ describe('RemoveCustomerTable', () => {
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
-      district: 'District Test',
+      neighborhood: 'Neighborhood Test',
       city: 'City Test',
       state: 'State Test',
     });
@@ -80,7 +80,7 @@ describe('RemoveCustomerTable', () => {
       zip_code: '99999-999',
       number: 9,
       street: 'Rua test',
-      district: 'District Test',
+      neighborhood: 'Neighborhood Test',
       city: 'City Test',
       state: 'State Test',
     });

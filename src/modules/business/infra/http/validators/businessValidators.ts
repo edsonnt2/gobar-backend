@@ -12,7 +12,7 @@ export default {
       street: Joi.string().required(),
       number: Joi.number().required(),
       complement: Joi.string(),
-      district: Joi.string().required(),
+      neighborhood: Joi.string().required(),
       city: Joi.string().required(),
       state: Joi.string().required(),
     },

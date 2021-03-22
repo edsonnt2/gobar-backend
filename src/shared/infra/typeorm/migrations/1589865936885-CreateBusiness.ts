@@ -58,7 +58,7 @@ export default class CreateBusiness1589865936885 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'district',
+            name: 'neighborhood',
             type: 'varchar',
           },
           {

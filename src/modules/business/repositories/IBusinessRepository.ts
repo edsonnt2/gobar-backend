@@ -15,7 +15,7 @@ export default interface IBusinessRepository {
     street,
     number,
     complement,
-    district,
+    neighborhood,
     city,
     state,
   }: ICreateBusinessDTO): Promise<Business>;

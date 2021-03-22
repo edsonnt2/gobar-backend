@@ -81,7 +81,7 @@ export default class AddFieldLabelInTables1593803706319
         isNullable: true,
       }),
       new TableColumn({
-        name: 'label_district',
+        name: 'label_neighborhood',
         type: 'varchar',
       }),
       new TableColumn({
@@ -146,7 +146,7 @@ export default class AddFieldLabelInTables1593803706319
         type: 'varchar',
       }),
       new TableColumn({
-        name: 'label_district',
+        name: 'label_neighborhood',
         type: 'varchar',
       }),
       new TableColumn({
