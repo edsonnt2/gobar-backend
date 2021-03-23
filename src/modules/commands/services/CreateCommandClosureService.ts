@@ -54,11 +54,11 @@ class CreateCommandService {
 
     payment_commands_closure.forEach(payClosure => {
       if (payClosure.type === 'money' && !payClosure.received) {
-        throw new AppError('Type Money requires value received');
+        throw new AppError('Type money requires value received');
       }
 
       if (payClosure.type === 'card' && !payClosure.type_card) {
-        throw new AppError('Type Card requires selected of card');
+        throw new AppError('Type card requires selected of card');
       }
     });
 
