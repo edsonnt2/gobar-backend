@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:14.4
+    container_name: gobar_postgres
+    volumes:
+      - ./dbs/postgres/:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    networks:
+      - gobar
+    environment:
+      - POSTGRES_DB=gobar
+      - POSTGRES_USER=gobar
+      - POSTGRES_PASSWORD=gobar
+
+  redis:
+    image: redis:7.0.2
+    container_name: gobar_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - gobar
+
+networks:
+  gobar:
+    name: gobar
+    driver: bridge

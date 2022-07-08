@@ -1,8 +1,8 @@
 temp/
 .idea/
-.vscode/
 coverage/
 node_modules/
+dbs/
 dist/
 tmp/*
 !tmp/.gitkeep
